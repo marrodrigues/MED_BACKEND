@@ -27,7 +27,7 @@ module.exports = {
       },
       dataNascimento: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
       },
       createdAt: {
         allowNull: false,
