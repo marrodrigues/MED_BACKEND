@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon index.js",
-    "production": "pm2 start index.js --name MED_Backend"
+    "production": "pm2 start index.js --name MED_Backend",
+    "delete": "pm2 delete 0"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
