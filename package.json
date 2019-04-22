@@ -1,0 +1,25 @@
+{
+  "name": "MED_Backend",
+  "version": "1.0.0",
+  "description": "Backend do site da MED Pizzaria",
+  "main": "index.js",
+  "repository": "https://github.com/marrodrigues/MED_BACKEND.git",
+  "author": "Mario Rodrigues <m.rodrigues.agr@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "production": "pm2 start index.js --name MED_Backend"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mysql": "^2.17.1",
+    "pm2": "^3.5.0",
+    "sequelize": "^5.7.4",
+    "swagger-node-express": "^2.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11"
+  }
+}
