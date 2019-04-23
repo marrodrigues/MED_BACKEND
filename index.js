@@ -22,11 +22,17 @@ app.use('/', require('./src/route')(connection));
 //app.use('/docs', express.static(__dirname +'/docs'));
 
 // definindo a porta na qual a aplicacao ira rodar
-app.set('port', (process.env.PORT || 5000));
+//app.set('port', (process.env.PORT || 5000));
+
+//"production": "pm2 start index.js --name MED_Backend",
+    //"delete": "pm2 delete 0"
+  // "pm2": "^3.5.0",
+
+const port = process.env.PORT || 5000
 
 // subindo servidor e conectando o banco de dados
 const server = http.createServer(app);
-server.listen(app.get('port'), () => {   
+server.listen(port, () => {   
     // mongodb.connectMongo(env.mongodb);
-    console.log(`Servidor rodando na porta [${app.get('port')}]`) 
+    console.log(`Servidor rodando na porta [${port}]`) 
 });
