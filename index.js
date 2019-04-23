@@ -24,10 +24,6 @@ app.use('/', require('./src/route')(connection));
 // definindo a porta na qual a aplicacao ira rodar
 //app.set('port', (process.env.PORT || 5000));
 
-//"production": "pm2 start index.js --name MED_Backend",
-    //"delete": "pm2 delete 0"
-  // "pm2": "^3.5.0",
-
 const port = process.env.PORT || 5000
 
 // subindo servidor e conectando o banco de dados
