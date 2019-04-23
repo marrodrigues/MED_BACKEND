@@ -1,1 +1,1 @@
-web: yarn prd
+web: yarn dev
