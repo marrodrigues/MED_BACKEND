@@ -4,9 +4,6 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const env = require('./config/env'); // config de ambiente 
-const connection = require('./config/db')
-
-connection.connect()
 
 // habilitando uso do cors
 app.use(cors());
@@ -16,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // carregando as rotas da aplicacao
-app.use('/', require('./src/route')(connection));
+app.use('/', require('./src/route'));
 
 // definindo o diretorio de arquivos estaticos
 //app.use('/docs', express.static(__dirname +'/docs'));
