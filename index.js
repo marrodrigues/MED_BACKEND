@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // carregando as rotas da aplicacao
-app.use('/', require('./src/route'));
+app.use('/', require('./src/route')());
 
 // definindo o diretorio de arquivos estaticos
 //app.use('/docs', express.static(__dirname +'/docs'));
