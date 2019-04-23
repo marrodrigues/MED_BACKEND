@@ -1,12 +1,21 @@
 const express = require('express')
 const router = express.Router()
 
-const {Pessoa} = require('../models')
+const clienteController = require('../controller/clienteController')
 
 module.exports = () => {
     router
 
-    .get('/clientes', async (req, res) => {
+    .get('/', (req, res) => {
+        res.status(200).json({ status: 'MED API está online!', time: new Date() });
+    })
+    .get('/clientes', (req, res) => clienteController.findAll(req,res))
+    .get('/clientes/:id', (req, res) => clienteController.find(req,res))
+    .post('/clientes', (req, res) => clienteController.create(req,res))
+    .put('/clientes/:id', (req, res) => clienteController.update(req,res))
+    .delete('/clientes/:id', (req, res) => clienteController.delete(req,res))
+
+    /*.get('/clientes', async (req, res) => {
         const pessoas = await Pessoa.findAll()
         res.status(200).json(pessoas)
     }) //Listar pessoas
@@ -34,7 +43,7 @@ module.exports = () => {
             }
         })
         res.status(204).json('Cliente deletado')
-    }) //Excluir pessoa
+    }) //Excluir pessoa*/
 
     return router
 }

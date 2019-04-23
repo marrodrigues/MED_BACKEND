@@ -30,12 +30,14 @@ module.exports = {
         type: DataTypes.DATEONLY,
       },
       createdAt: {
-        allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false
       },
       updatedAt: {
-        allowNull: false,
         type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false
       },
     });
   },

@@ -4,8 +4,5 @@ module.exports = {
     password: '3d0f499e',
     database: 'heroku_f1d31755cbdc0e8',
     dialect: 'mysql',
-    dialectOptions: {
-        useUTC: true
-    },
     timezone: '-03:00'
 }

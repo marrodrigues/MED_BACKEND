@@ -5,6 +5,8 @@ const express = require('express');
 const app = express();
 const env = require('./config/env'); // config de ambiente 
 
+const port = process.env.PORT || 5000
+
 // habilitando uso do cors
 app.use(cors());
 
@@ -21,7 +23,6 @@ app.use('/', require('./src/route')());
 // definindo a porta na qual a aplicacao ira rodar
 //app.set('port', (process.env.PORT || 5000));
 
-const port = process.env.PORT || 5000
 
 // subindo servidor e conectando o banco de dados
 const server = http.createServer(app);
