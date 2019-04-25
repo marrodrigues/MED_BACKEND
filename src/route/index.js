@@ -14,7 +14,7 @@ module.exports = (jwtOptions, passport) => {
     .get('/protected', passport.authenticate('jwt', {session: false}), (req, res) => {
         res.send('Parabéns! Se você está vendo isso é porque você está autenticado.')
     })
-    .post('/login', (req, res) => loginController.login(req, res))
+    .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
     .get('/clientes', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.findAll(req,res))
     .get('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.find(req,res))
     .post('/clientes', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.create(req,res))

@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const pessoaService = require('../../service/pessoaService')
 
 class LoginController {
 
-    login(req, res, next) {
+    login(req, res, jwtOptions) {
         const {login, senha} = req.body
         if(login && senha){
             pessoaService.findByLogin(login)
