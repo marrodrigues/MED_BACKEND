@@ -22,7 +22,7 @@ class ClienteController {
     findAll(req, res) {
         service.findAll()
             .then(data => {
-                if (!data.size){
+                if (data.length === 0){
                     res.status(404).json('Não foram encontrados clientes.')
                 } else{
                     res.status(200).json(data)
