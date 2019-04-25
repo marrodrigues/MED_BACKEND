@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const service = require('../../service/clienteService')
 
+
 class ClienteController {
 
     create(req, res) {
@@ -10,6 +11,7 @@ class ClienteController {
                 console.log(err)
                 res.status(400).send('Dados inconsistentes ao tentar criar um novo cliente.')
             }
+            
             service.create(data)
                 .then(data => {
                     res.status(201).send(data)
@@ -23,7 +25,7 @@ class ClienteController {
         service.findAll()
             .then(data => {
                 if (data.length === 0){
-                    res.status(404).json('Não foram encontrados clientes.')
+                    res.status(404).send('Não foram encontrados clientes.')
                 } else{
                     res.status(200).json(data)
                 }
@@ -37,7 +39,7 @@ class ClienteController {
         service.find(id)
             .then(data => {
                 if (!data){
-                    res.status(404).json('O cliente especificado não foi encontrado.')
+                    res.status(404).send('O cliente especificado não foi encontrado.')
                 }
                 res.status(200).json(data);
             })
@@ -51,15 +53,15 @@ class ClienteController {
             payload: req.body
         }
         this._validate(req, (err, result) => {
-            if (err || !data.id)
+            if (err || !data.id){
                 res.status(400).send('Dados inconsistentes ao tentar atualizar um cliente.')
-
+            }
             service.update(data)
                 .then(data => {
                     if (!data)
-                        res.status(404).json('Cliente não encontrado.')
+                        res.status(404).send('Cliente não encontrado.')
 
-                    res.status(204).json('Cliente atualizado com sucesso.')
+                    res.status(204).send('Cliente atualizado com sucesso.')
                 })
                 .catch(err => res.status(401).send('Atualização de cliente negada.'))
         })
@@ -74,10 +76,10 @@ class ClienteController {
         service.delete(id)
             .then(data => {
                 if (!data || data === 404){
-                    res.status(404).json('Cliente não encontrado.')
+                    res.status(404).send('Cliente não encontrado.')
                 } 
                 
-                res.status(204).json('Cliente excluido com sucesso.')
+                res.status(204).send('Cliente excluido com sucesso.')
                 
             })
             .catch(err => res.status(401).send('Exclusão de cliente negada.'))

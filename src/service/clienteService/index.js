@@ -1,10 +1,14 @@
-const {cliente} = require('../../models');
+const bcrypt = require('bcrypt')
 
+const {cliente} = require('../../models');
 const pessoaService = require('../../service/pessoaService')
 
 class ClienteService {
 
     create(data) {
+        /*const salt = bcrypt.genSaltSync(10)
+        data.pessoa.senha = bcrypt.hashSync(data.pessoa.senha, salt)
+        console.log(data.pessoa.senha)*/
         return new Promise((resolve, reject) => {
             cliente.create(data, {
                 include:[
@@ -58,6 +62,9 @@ class ClienteService {
     }
 
     update(data) {
+        /*const salt = bcrypt.genSaltSync(10)
+        data.pessoa.senha = bcrypt.hashSync(data.pessoa.senha, salt)
+        console.log(data.pessoa.senha)*/
         return new Promise((resolve, reject) => {
             cliente.update(data.payload, { include: [
                 {
