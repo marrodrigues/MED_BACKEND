@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Cliente = sequelize.define('cliente', {
-        cpf: DataTypes.INTEGER,
+        cpf: DataTypes.STRING,
         flag_bloqueado: DataTypes.INTEGER,
         motivo_bloqueio: DataTypes.STRING,
     })

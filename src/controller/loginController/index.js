@@ -16,7 +16,7 @@ class LoginController {
                     bcrypt.compare(senha, pessoa.senha, (err, isValid) => {
                         if (!isValid) { res.status(401).send('Senha incorreta.') }
                         const payload = {id: pessoa.id}
-                        const token = jwt.sign(payload, jwtOptions.secretOrKey)
+                        const token = jwt.sign(payload, jwtOptions.secretOrKey, {expiresIn: "10s"})
                         res.status(200).json({msg: 'OK', token: token})
                     })
                 })
