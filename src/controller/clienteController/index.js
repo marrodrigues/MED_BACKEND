@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const service = require('../../service/clienteService');
+const service = require('../../service/clienteService')
 
 class ClienteController {
 
@@ -22,12 +22,13 @@ class ClienteController {
     findAll(req, res) {
         service.findAll()
             .then(data => {
-                if (!data)
+                if (!data.size){
                     res.status(404).json('Não foram encontrados clientes.')
-
-                res.status(200).json(data)
+                } else{
+                    res.status(200).json(data)
+                }
             })
-            .catch(err => res.status(401).send('Busca por clientes negada.\n'))
+            .catch(err => res.status(401).send('Busca por clientes negada.\n' + err))
     }
 
 
@@ -35,12 +36,12 @@ class ClienteController {
         let id = req.params.id;
         service.find(id)
             .then(data => {
-                if (!data[0])
+                if (!data){
                     res.status(404).json('O cliente especificado não foi encontrado.')
-
-                res.status(200).json(data[0]);
+                }
+                res.status(200).json(data);
             })
-            .catch(err => res.status(401).send('Busca por cliente negada.'))
+            .catch(err => res.status(401).send('Busca por cliente negada.\n'+ err))
     }
 
 
@@ -72,10 +73,12 @@ class ClienteController {
 
         service.delete(id)
             .then(data => {
-                if (!data)
+                if (!data || data === 404){
                     res.status(404).json('Cliente não encontrado.')
-
+                } 
+                
                 res.status(204).json('Cliente excluido com sucesso.')
+                
             })
             .catch(err => res.status(401).send('Exclusão de cliente negada.'))
     }
@@ -85,17 +88,17 @@ class ClienteController {
     _validate(req, cb) {
         const schema = Joi.object().keys({
             nome: Joi.string().required(),
-            login: Joi.number().required(),
-            senha: Joi.number().required(),
+           /* login: Joi.string().required(),
+            senha: Joi.string().required(),
             email: Joi.string().required(),
-            dataNascimento: Joi.string().required()
+            dataNascimento: Joi.string().required()*/
         });
         Joi.validate({
-            nome: req.body.nome,
-            login: req.body.login,
+            nome: req.body.pessoa.nome,
+            /*login: req.body.login,
             senha: req.body.senha,
             email: req.body.email,
-            dataNascimento: req.body.dataNascimento
+            dataNascimento: req.body.dataNascimento*/
         }, schema, cb)
     }
 

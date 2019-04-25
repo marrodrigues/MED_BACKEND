@@ -1,19 +1,39 @@
-const {Pessoa} = require('../../models');
+const {cliente} = require('../../models');
 
+const pessoaService = require('../../service/pessoaService')
 
 class ClienteService {
 
     create(data) {
         return new Promise((resolve, reject) => {
-            Pessoa.create(data)
-                .then(result => resolve(result))
-                .catch(err => reject(err))
+            cliente.create(data, {
+                include:[
+                    {
+                        association: "pessoa",
+                        include:[
+                            "endereco",
+                            "telefone"
+                        ]   
+                    }
+                ]
+            })
+                .then(result => resolve(result)).catch(err => reject(err))
         })
     }
 
     findAll() {
         return new Promise((resolve, reject) => {
-            Pessoa.findAll()
+            cliente.findAll({
+                include: [
+                    {
+                        association: "pessoa",
+                        include:[
+                            "endereco",
+                            "telefone"
+                        ]
+                    }
+                ]
+            })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
         })
@@ -21,7 +41,17 @@ class ClienteService {
 
     find(id) {
         return new Promise((resolve, reject) => {
-            Pessoa.findByPk(id)
+            cliente.findByPk(id,{
+                include: [
+                    {
+                        association: "pessoa",
+                        include:[
+                            "endereco",
+                            "telefone"
+                        ]
+                    }
+                ]
+            })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
         })
@@ -29,22 +59,27 @@ class ClienteService {
 
     update(data) {
         return new Promise((resolve, reject) => {
-            Pessoa.update(data.payload, {where:{id: data.id} })
+            cliente.update(data.payload, { include: [
+                {
+                    association: "pessoa",
+                    include:[
+                        "endereco",
+                        "telefone"
+                    ]
+                }
+            ],
+            where:{id: data.id} })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
         })
     }
 
-    delete(id) {
-        return new Promise((resolve, reject) => {
-            Pessoa.destroy({
-                where: {
-                    id: id
-                }
-            })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })
+    async delete(id) {
+        const cliente = await this.find(id)
+        if(cliente == null){
+            return 404
+        } 
+        return await pessoaService.delete(cliente.pessoaId)
     }
 
 }
