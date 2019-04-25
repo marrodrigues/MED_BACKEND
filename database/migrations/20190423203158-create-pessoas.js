@@ -86,6 +86,7 @@ module.exports = {
         },
         flag_bloqueado: {
           allowNull: false,
+          defaultValue: 0,
           type: DataTypes.INTEGER,
         },
         motivo_bloqueio: {

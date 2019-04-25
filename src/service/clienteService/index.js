@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 
-const {cliente} = require('../../models');
+const {cliente, pessoa, endereco} = require('../../models');
 const pessoaService = require('../../service/pessoaService')
 
 class ClienteService {
@@ -61,24 +61,23 @@ class ClienteService {
         })
     }
 
-    update(data) {
-        const salt = bcrypt.genSaltSync(10)
-        data.pessoa.senha = bcrypt.hashSync(data.pessoa.senha, salt)
-        console.log(data.pessoa.senha)
-        return new Promise((resolve, reject) => {
-            cliente.update(data.payload, { include: [
-                {
-                    association: "pessoa",
-                    include:[
-                        "endereco",
-                        "telefone"
-                    ]
-                }
-            ],
-            where:{id: data.id} })
+    async update(data) {
+        /*return new Promise((resolve, reject) => {
+            cliente.update(data.payload, { where:{id: data.id} })
+                .then(result => pessoaService.update(data.payload.pessoa))
                 .then(result => resolve(result))
                 .catch(err => reject(err))
-        })
+        })*/
+
+        try {
+            const salt = bcrypt.genSaltSync(10)
+            data.payload.pessoa.senha = bcrypt.hashSync(data.payload.pessoa.senha, salt)
+            await cliente.update(data.payload, { where:{id: data.id} })
+            await pessoaService.update(data.payload.pessoa)
+            return 200
+        } catch (error) {
+            return error            
+        }
     }
 
     async delete(id) {
