@@ -58,12 +58,14 @@ class ClienteController {
             }
             service.update(data)
                 .then(data => {
-                    if (!data)
+                    console.log(data)
+                    if (!data){
                         res.status(404).send('Cliente não encontrado.')
-
-                    res.status(204).send('Cliente atualizado com sucesso.')
+                    } else{
+                        res.status(204).json('Cliente atualizado com sucesso.')
+                    }
                 })
-                .catch(err => res.status(401).send('Atualização de cliente negada.'))
+                .catch(err => res.status(401).send('Atualização de cliente negada.' + err))
         })
     }
 
