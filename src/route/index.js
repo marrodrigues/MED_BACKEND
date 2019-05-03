@@ -24,11 +24,11 @@ module.exports = (jwtOptions, passport) => {
     .put('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.update(req,res))
     .delete('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.delete(req,res))
 
-    .get('/funcionarios', (req, res) => funcionarioController.findAll(req,res))
-    .get('/funcionarios/:id', (req, res) => funcionarioController.find(req,res))
-    .post('/funcionarios', (req, res) => funcionarioController.create(req,res))
-    .put('/funcionarios/:id', (req, res) => funcionarioController.update(req,res))
-    .delete('/funcionarios/:id', (req, res) => funcionarioController.delete(req,res))
+    .get('/funcionarios', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.findAll(req,res))
+    .get('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.find(req,res))
+    .post('/funcionarios', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.create(req,res))
+    .put('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.update(req,res))
+    .delete('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.delete(req,res))
     
 
     /*.get('/clientes', async (req, res) => {
