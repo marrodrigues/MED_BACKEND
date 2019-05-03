@@ -40,12 +40,16 @@ module.exports = {
         allowNull: false
       },
     }).then(() => {
-      queryInterface.createTable('clientes', {
+      queryInterface.createTable('funcionarios', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
+        },
+        cpf: {
+          allowNull: false,
+          type: DataTypes.STRING,
         },
         cargo: {
           allowNull: false,
@@ -73,7 +77,7 @@ module.exports = {
         }
       })
     }).then(() => {
-      queryInterface.createTable('funcionarios', {
+      queryInterface.createTable('clientes', {
         id: {
           allowNull: false,
           autoIncrement: true,
@@ -82,7 +86,7 @@ module.exports = {
         },
         cpf: {
           allowNull: false,
-          type: DataTypes.BIGINT,
+          type: DataTypes.STRING,
         },
         flag_bloqueado: {
           allowNull: false,
