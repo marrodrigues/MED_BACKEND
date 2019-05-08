@@ -11,13 +11,16 @@ class LoginController {
             pessoaService.findByLogin(login)
                 .then(pessoa => {
                     if(!pessoa){
-                        res.status(401).send(`Nenhum usuário encontrado.`)
+                        res.status(401).send(`Login inválido.`)
                     }
                     bcrypt.compare(senha, pessoa.senha, (err, isValid) => {
                         if (!isValid) { res.status(401).send('Senha incorreta.') }
                         const payload = {id: pessoa.id}
                         const token = jwt.sign(payload, jwtOptions.secretOrKey)
-                        res.status(200).json({msg: 'OK', token: token})
+                        pessoaService.getRole(payload.id).then(perfil => {
+                            if(perfil.role === 'Erro na busca') res.status(404).send('Perfil não encontrado.')
+                            res.status(200).json({msg: 'OK', token: token, role: perfil.role})
+                        })
                     })
                 })
                 .catch(err => res.status(503).send(`Serviço indisponível, erro: ${err}`))

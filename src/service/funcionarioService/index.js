@@ -88,6 +88,18 @@ class FuncionarioService {
         return await pessoaService.delete(funcionario.pessoaId)
     }
 
+    findByPessoaId(id) {
+        return new Promise((resolve, reject) => {
+            funcionario.findOne({
+                where: {
+                    pessoaId: id
+                }
+            })
+                .then(result => resolve(result))
+                .catch(err => reject(err))
+        })
+    }
+
 }
 
 module.exports = new FuncionarioService();

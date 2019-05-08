@@ -15,22 +15,28 @@ module.exports = (jwtOptions, passport) => {
     .get('/protected', passport.authenticate('jwt', {session: false}), (req, res) => {
         res.send('Parabéns! Se você está vendo isso é porque você está autenticado.')
     })
-
+    // LOGIN
     .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
-
+    .get('/logout', (req, res) => {res.status(200).send({ auth: false, token: null })})
+    //CLIENTES
     .get('/clientes', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.findAll(req,res))
     .get('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.find(req,res))
     .post('/clientes', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.create(req,res))
     .put('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.update(req,res))
     .delete('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.delete(req,res))
-
+    //FUNCIONARIOS
     .get('/funcionarios', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.findAll(req,res))
     .get('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.find(req,res))
     .post('/funcionarios', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.create(req,res))
     .put('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.update(req,res))
     .delete('/funcionarios/:id', passport.authenticate('jwt', {session: false}), (req, res) => funcionarioController.delete(req,res))
-    
+    //INSUMOS
 
+    //PRODUTOS
+
+    //PEDIDOS
+
+    
     /*.get('/clientes', async (req, res) => {
         const pessoas = await Pessoa.findAll()
         res.status(200).json(pessoas)

@@ -1,4 +1,6 @@
-const {pessoa, endereco, telefone} = require('../../models');
+const {pessoa, endereco, telefone} = require('../../models')
+const clienteService = require('../../service/clienteService')
+const funcionarioService = require('../../service/funcionarioService')
 
 class PessoaService {
 
@@ -69,7 +71,24 @@ class PessoaService {
                 .then(result => resolve(result))
                 .catch(err => reject(err))
         })
-    }    
+    }
+    
+    async getRole(id){
+        const cliente = await clienteService.findByPessoaId(id)
+        if(cliente) {
+            return {role: 'Cliente'}
+        } else {
+            const funcionario = await funcionarioService.findByPessoaId(id)
+            if(!funcionario) return {role: 'Erro na busca'}
+            if(funcionario.cargo === 'Admin'){
+             return {role: 'Admin'}
+            }else if(funcionario.cargo === 'Funcionario'){
+                return {role: 'Funcionario'}
+            }else{
+                return {role: 'Erro na busca'}
+            }    
+        }
+    }
 }
 
 module.exports = new PessoaService();

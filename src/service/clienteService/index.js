@@ -88,6 +88,18 @@ class ClienteService {
         return await pessoaService.delete(cliente.pessoaId)
     }
 
+    findByPessoaId(id) {
+        return new Promise((resolve, reject) => {
+            cliente.findOne({
+                where: {
+                    pessoaId: id
+                }
+            })
+                .then(result => resolve(result))
+                .catch(err => reject(err))
+        })
+    }
+
 }
 
 module.exports = new ClienteService();
