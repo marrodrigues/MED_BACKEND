@@ -1,6 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
     const Funcionario = sequelize.define('funcionario', {
-        cpf: DataTypes.STRING,
         cargo: DataTypes.STRING,
     })
 

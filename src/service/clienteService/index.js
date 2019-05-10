@@ -34,9 +34,11 @@ class ClienteService {
                         include:[
                             "endereco",
                             "telefone"
-                        ]
+                        ],
+                        attributes: { exclude: ["createdAt", "updatedAt"] }
                     }
-                ]
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
             })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
@@ -52,9 +54,11 @@ class ClienteService {
                         include:[
                             "endereco",
                             "telefone"
-                        ]
+                        ],
+                        attributes: { exclude: ["createdAt", "updatedAt"] }
                     }
-                ]
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
             })
                 .then(result => resolve(result))
                 .catch(err => reject(err))

@@ -10,13 +10,14 @@ class FuncionarioController {
             if (err){
                 console.log(err)
                 res.status(400).send('Dados inconsistentes ao tentar criar um novo funcionário.')
+            }else{
+                service.create(data)
+                    .then(data => {
+                        res.status(201).send(data)
+                    })
+                    .catch(err => res.status(401).send('Criação do novo funcionário negada.\n'+ err))
             }
             
-            service.create(data)
-                .then(data => {
-                    res.status(201).send(data)
-                })
-                .catch(err => res.status(401).send('Criação do novo funcionário negada.\n'+ err))
         })
     }
 
@@ -55,15 +56,16 @@ class FuncionarioController {
         this._validate(req, (err, result) => {
             if (err || !data.id){
                 res.status(400).send('Dados inconsistentes ao tentar atualizar um funcionário.')
+            }else{
+                service.update(data)
+                    .then(data => {
+                        if (!data)
+                            res.status(404).send('Funcionário não encontrado.')
+    
+                        res.status(204).send('Funcionário atualizado com sucesso.')
+                    })
+                    .catch(err => res.status(401).send('Atualização de funcionário negada.'))
             }
-            service.update(data)
-                .then(data => {
-                    if (!data)
-                        res.status(404).send('Funcionário não encontrado.')
-
-                    res.status(204).send('Funcionário atualizado com sucesso.')
-                })
-                .catch(err => res.status(401).send('Atualização de funcionário negada.'))
         })
     }
 
@@ -89,18 +91,34 @@ class FuncionarioController {
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
+            cargo: Joi.string().required(),
+            cpf: Joi.string().required(),
             nome: Joi.string().required(),
-           /* login: Joi.string().required(),
+            login: Joi.string().required(),
             senha: Joi.string().required(),
             email: Joi.string().required(),
-            dataNascimento: Joi.string().required()*/
+            dataNascimento: Joi.date().required(),
+            logradouro: Joi.string().required(),
+            numero: Joi.string().required(),
+            CEP: Joi.string().required(),
+            bairro: Joi.string().required(),
+            numero_telefone: Joi.string().required(),
+            tipo: Joi.string().required()
         });
         Joi.validate({
+            cargo: req.body.cargo,
+            cpf: req.body.pessoa.cpf,
             nome: req.body.pessoa.nome,
-            /*login: req.body.login,
-            senha: req.body.senha,
-            email: req.body.email,
-            dataNascimento: req.body.dataNascimento*/
+            login: req.body.pessoa.login,
+            senha: req.body.pessoa.senha,
+            email: req.body.pessoa.email,
+            dataNascimento: req.body.pessoa.dataNascimento,
+            logradouro: req.body.pessoa.endereco[0].logradouro,
+            numero: req.body.pessoa.endereco[0].numero,
+            CEP: req.body.pessoa.endereco[0].CEP,
+            bairro: req.body.pessoa.endereco[0].bairro,
+            numero_telefone: req.body.pessoa.telefone[0].numero_telefone,
+            tipo: req.body.pessoa.telefone[0].tipo,
         }, schema, cb)
     }
 

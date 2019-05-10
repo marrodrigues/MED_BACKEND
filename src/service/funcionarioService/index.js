@@ -31,12 +31,14 @@ class FuncionarioService {
                 include: [
                     {
                         association: "pessoa",
-                        include:[
+                        include: [
                             "endereco",
                             "telefone"
-                        ]
+                        ],
+                        attributes: { exclude: ["createdAt", "updatedAt"] }
                     }
-                ]
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
             })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
@@ -49,12 +51,14 @@ class FuncionarioService {
                 include: [
                     {
                         association: "pessoa",
-                        include:[
+                        include: [
                             "endereco",
                             "telefone"
-                        ]
+                        ],
+                        attributes: { exclude: ["createdAt", "updatedAt"] }
                     }
-                ]
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
             })
                 .then(result => resolve(result))
                 .catch(err => reject(err))

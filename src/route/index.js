@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router()
 
 const clienteController = require('../controller/clienteController')
-const loginController = require('../controller/loginController')
 const funcionarioController = require('../controller/funcionarioController')
+const loginController = require('../controller/loginController')
+const pessoaController = require('../controller/pessoaController')
 
 module.exports = (jwtOptions, passport) => {
     router
@@ -18,6 +19,10 @@ module.exports = (jwtOptions, passport) => {
     // LOGIN
     .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
     .get('/logout', (req, res) => {res.status(200).send({ auth: false, token: null })})
+    //PESSOA
+    .get('/valida/cpf/:cpf', passport.authenticate('jwt', {session: false}), (req, res) => pessoaController.findByCPF(req,res))
+    .get('/valida/email/:email', passport.authenticate('jwt', {session: false}), (req, res) => pessoaController.findByEmail(req,res))
+    .get('/valida/login/:login', passport.authenticate('jwt', {session: false}), (req, res) => pessoaController.findByLogin(req,res))
     //CLIENTES
     .get('/clientes', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.findAll(req,res))
     .get('/clientes/:id', passport.authenticate('jwt', {session: false}), (req, res) => clienteController.find(req,res))

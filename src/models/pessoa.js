@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Pessoa = sequelize.define('pessoa', {
+        cpf: DataTypes.STRING,
         nome: DataTypes.STRING,
         login: DataTypes.STRING,
         senha: DataTypes.STRING,

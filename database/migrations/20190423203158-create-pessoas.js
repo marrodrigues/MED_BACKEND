@@ -7,6 +7,11 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
+      cpf: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        unique: true
+      },
       nome: {
         allowNull: false,
         type: DataTypes.STRING,
@@ -47,10 +52,6 @@ module.exports = {
           primaryKey: true,
           type: DataTypes.INTEGER
         },
-        cpf: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
         cargo: {
           allowNull: false,
           type: DataTypes.STRING,
@@ -83,10 +84,6 @@ module.exports = {
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
-        },
-        cpf: {
-          allowNull: false,
-          type: DataTypes.STRING,
         },
         flag_bloqueado: {
           allowNull: false,
@@ -147,10 +144,12 @@ module.exports = {
         cidade: {
           allowNull: false,
           type: DataTypes.STRING,
+          defaultValue: 'Rio de Janeiro'
         },
         UF: {
           allowNull: false,
           type: DataTypes.STRING,
+          defaultValue: 'RJ'
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -184,8 +183,9 @@ module.exports = {
         DDD: {
           allowNull: false,
           type: DataTypes.INTEGER,
+          defaultValue: 21
         },
-        numero: {
+        numero_telefone: {
           allowNull: false,
           type: DataTypes.STRING,
         },

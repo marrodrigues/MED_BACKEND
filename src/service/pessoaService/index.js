@@ -8,9 +8,44 @@ class PessoaService {
         return new Promise((resolve, reject) => {
             pessoa.findByPk(id,{
                 include: [
-                            "endereco",
-                            "telefone"
-                ]
+                    "endereco",
+                    "telefone"
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+            })
+                .then(result => resolve(result))
+                .catch(err => reject(err))
+        })
+    }
+
+    findByCPF(cpf) {
+        return new Promise((resolve, reject) => {
+            pessoa.findOne({
+                include: [
+                    "endereco",
+                    "telefone"
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+                where: {
+                    cpf: cpf
+                }
+            })
+                .then(result => resolve(result))
+                .catch(err => reject(err))
+        })
+    }
+
+    findByEmail(email) {
+        return new Promise((resolve, reject) => {
+            pessoa.findOne({
+                include: [
+                    "endereco",
+                    "telefone"
+                ],
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+                where: {
+                    email: email
+                }
             })
                 .then(result => resolve(result))
                 .catch(err => reject(err))
@@ -21,9 +56,10 @@ class PessoaService {
         return new Promise((resolve, reject) => {
             pessoa.findOne({
                 include: [
-                            "endereco",
-                            "telefone"
+                    "endereco",
+                    "telefone"
                 ],
+                attributes: { exclude: ["createdAt", "updatedAt"] },
                 where: {
                     login: login
                 }
