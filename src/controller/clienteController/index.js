@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const service = require('../../service/clienteService')
+const clienteService = require('../../service/clienteService')
 
 
 class ClienteController {
@@ -7,43 +7,50 @@ class ClienteController {
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {
-            if (err){
+            if (err) {
                 console.log(err)
                 res.status(400).send('Dados inconsistentes ao tentar criar um novo cliente.')
-            }else{
-                service.create(data)
-                    .then(data => {
-                        res.status(201).send(data)
+            } else {
+                clienteService.create(data)
+                    .then(result => {
+                        if (!result || result.status === 500) {
+                            res.status(500).send('Erro inesperado.\n' + result.error)
+                        } else {
+                            res.status(201).send(result)
+                        }
                     })
-                    .catch(err => res.status(401).send('Criação do novo cliente negada.\n'+ err))
             }
         })
     }
 
 
     findAll(req, res) {
-        service.findAll()
-            .then(data => {
-                if (data.length === 0){
+        clienteService.findAll()
+            .then(result => {
+                if (result.length === 0) {
                     res.status(404).send('Não foram encontrados clientes.')
-                } else{
-                    res.status(200).json(data)
+                } else if (!result || result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(200).json(result)
                 }
             })
-            .catch(err => res.status(401).send('Busca por clientes negada.\n' + err))
+            .catch(err => res.status(500).send('Busca por clientes negada.\n' + err))
     }
 
 
     find(req, res) {
         let id = req.params.id;
-        service.find(id)
-            .then(data => {
-                if (!data){
+        clienteService.find(id)
+            .then(result => {
+                if (!result) {
                     res.status(404).send('O cliente especificado não foi encontrado.')
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(200).json(result)
                 }
-                res.status(200).json(data);
             })
-            .catch(err => res.status(401).send('Busca por cliente negada.\n'+ err))
     }
 
 
@@ -53,19 +60,19 @@ class ClienteController {
             payload: req.body
         }
         this._validate(req, (err, result) => {
-            if (err || !data.id){
+            if (err || !data.id) {
                 res.status(400).send('Dados inconsistentes ao tentar atualizar um cliente.')
-            }else{
-                service.update(data)
-                    .then(data => {
-                        console.log(data)
-                        if (!data){
+            } else {
+                clienteService.update(data)
+                    .then(result => {
+                        if (!result) {
                             res.status(404).send('Cliente não encontrado.')
-                        } else{
+                        } else if (result.status === 500) {
+                            res.status(500).send('Erro inesperado.\n' + result.error)
+                        } else {
                             res.status(204).json('Cliente atualizado com sucesso.')
                         }
                     })
-                    .catch(err => res.status(401).send('Atualização de cliente negada.' + err))
             }
         })
     }
@@ -76,16 +83,16 @@ class ClienteController {
         if (!id)
             res.status(400).send('Dados inconsistentes ao tentar excluir cliente.')
 
-        service.delete(id)
-            .then(data => {
-                if (!data || data === 404){
+        clienteService.delete(id)
+            .then(result => {
+                if (!result || result === 404) {
                     res.status(404).send('Cliente não encontrado.')
-                } 
-                
-                res.status(204).send('Cliente excluido com sucesso.')
-                
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(204).send('Cliente excluido com sucesso.')
+                }
             })
-            .catch(err => res.status(401).send('Exclusão de cliente negada.'))
     }
 
 

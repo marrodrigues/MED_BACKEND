@@ -1,43 +1,47 @@
-const service = require('../../service/pessoaService')
-
+const pessoaService = require('../../service/pessoaService')
 
 class PessoaController {
 
     findByCPF(req, res) {
         const cpf = req.params.cpf;
-        console.log(cpf)
-        service.findByCPF(cpf)
-            .then(data => {
-                if (!data){
+        pessoaService.findByCPF(cpf)
+            .then(result => {
+                if (!result) {
                     res.status(200).send('CPF válido');
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(409).send('O CPF em questão já se encontra cadastrado.')
                 }
-                res.status(409).send('O CPF em questão já se encontra cadastrado.')
             })
-            .catch(err => res.status(401).send('Busca por CPF negada.\n'+ err))
     }
 
     findByEmail(req, res) {
         const email = req.params.email;
-        service.findByEmail(email)
-            .then(data => {
-                if (!data){
+        pessoaService.findByEmail(email)
+            .then(result => {
+                if (!result) {
                     res.status(200).send('E-mail válido');
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(409).send('O e-mail em questão já se encontra cadastrado.')
                 }
-                res.status(409).send('O e-mail em questão já se encontra cadastrado.')
             })
-            .catch(err => res.status(401).send('Busca por e-mail negada.\n'+ err))
     }
 
     findByLogin(req, res) {
         const login = req.params.login;
-        service.findByLogin(login)
-            .then(data => {
-                if (!data){
+        pessoaService.findByLogin(login)
+            .then(result => {
+                if (!result) {
                     res.status(200).send('Login válido');
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(409).send('O login em questão já existe.')
                 }
-                res.status(409).send('O login em questão já existe.')
             })
-            .catch(err => res.status(401).send('Busca por login negada.\n'+ err))
     }
 
 }
