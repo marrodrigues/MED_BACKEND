@@ -1,14 +1,16 @@
 module.exports = (sequelize, DataTypes) => {
     const Produto = sequelize.define('produto', {
+        nome:DataTypes.STRING,
         descricao:DataTypes.STRING,
-        qtd_unid: DataTypes.INTEGER,
-        unidade: DataTypes.STRING,
-        valor_unitario: DataTypes.DOUBLE
+        tamanho: DataTypes.STRING,
+        valor: DataTypes.DOUBLE,
+        lote: DataTypes.STRING,
+        validade: DataTypes.DOUBLE
     })
 
     Produto.associate = models => {
-        Produto.belongsToMany(models.insumo, {through: "insumo_produto"})
-        Produto.belongsToMany(models.pedido, {through: "pedido_produto"})
+        Produto.belongsToMany(models.insumo, {through: "insumos_produtos", as:"insumos", constraints: false})
+        Produto.belongsToMany(models.pedido, {through: "pedidos_produtos"})
     }
 
     return Produto

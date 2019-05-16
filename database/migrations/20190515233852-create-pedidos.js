@@ -176,6 +176,14 @@ module.exports = {
           primaryKey: true,
           type: DataTypes.INTEGER
         },
+        insumoId: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+        },
+        produtoId: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+        },
         createdAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
@@ -185,22 +193,6 @@ module.exports = {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
           allowNull: false
-        },
-        InsumoId: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'insumos',
-            key: 'id'
-          },
-        },
-        produtoId: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'produtos',
-            key: 'id'
-          },
         },
       })
     }).then(() => {

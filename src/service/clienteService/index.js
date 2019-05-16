@@ -23,20 +23,20 @@ class ClienteService {
             return { status: 500, error: error }
         }
 
-        /*return new Promise((resolve, reject) => {
-            cliente.create(data, {
-                include:[
-                    {
-                        association: "pessoa",
-                        include:[
-                            "endereco",
-                            "telefone"
-                        ]   
-                    }
-                ]
-            })
-                .then(result => resolve(result)).catch(err => reject(err))
-        })*/
+        // return new Promise((resolve, reject) => {
+        //     cliente.create(data, {
+        //         include:[
+        //             {
+        //                 association: "pessoa",
+        //                 include:[
+        //                     "endereco",
+        //                     "telefone"
+        //                 ]   
+        //             }
+        //         ]
+        //     })
+        //         .then(result => resolve(result)).catch(err => reject(err))
+        // })
     }
 
     async delete(id) {

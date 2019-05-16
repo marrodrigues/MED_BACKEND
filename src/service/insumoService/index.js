@@ -26,7 +26,22 @@ class InsumoService {
             return { status: 500, error: error }
         }
     }
-
+    
+    async find(id) {
+        try {
+            const result = await insumo.findByPk(id, {
+                include: [{
+                    association: "lote",
+                    attributes: { exclude: ["updatedAt", "insumoId"] }
+                }],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
+            })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
+    
     async findAll() {
         try {
             const result = await insumo.findAll({
@@ -42,19 +57,15 @@ class InsumoService {
         }
     }
 
-    async find(id) {
-        try {
-            const result = await insumo.findByPk(id, {
-                include: [{
-                    association: "lote",
-                    attributes: { exclude: ["updatedAt", "insumoId"] }
-                }],
-                attributes: { exclude: ["createdAt", "updatedAt"] }
-            })
-            return result
-        } catch (error) {
-            return { status: 500, error: error }
+    async findInsumos(insumos) {
+        let res = true
+        for(var insumo in insumos){
+            const result = await this.find(insumo.id)
+            if(!result){
+                res = result
+            }
         }
+        return res
     }
 
     async update(data) {

@@ -7,7 +7,7 @@ const loginController = require('../controller/loginController')
 const pessoaController = require('../controller/pessoaController')
 const loteController = require('../controller/loteController')
 const insumoController = require('../controller/insumoController')
-// const produtoController = require('../controller/produtoController')
+const produtoController = require('../controller/produtoController')
 // const pedidoController = require('../controller/pedidoController')
 
 module.exports = (jwtOptions, passport) => {
@@ -49,11 +49,11 @@ module.exports = (jwtOptions, passport) => {
         .put('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.update(req, res))
         .delete('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.delete(req, res))
         //PRODUTOS
-        // .get('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findAll(req, res))
-        // .get('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.find(req, res))
-        // .post('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.create(req, res))
-        // .put('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.update(req, res))
-        // .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
+        .get('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findAll(req, res))
+        .get('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.find(req, res))
+        .post('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.create(req, res))
+        .put('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.update(req, res))
+        .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
         // //PEDIDOS
         // .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
         // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
