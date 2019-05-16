@@ -5,6 +5,10 @@ const clienteController = require('../controller/clienteController')
 const funcionarioController = require('../controller/funcionarioController')
 const loginController = require('../controller/loginController')
 const pessoaController = require('../controller/pessoaController')
+const loteController = require('../controller/loteController')
+const insumoController = require('../controller/insumoController')
+// const produtoController = require('../controller/produtoController')
+// const pedidoController = require('../controller/pedidoController')
 
 module.exports = (jwtOptions, passport) => {
     router
@@ -32,11 +36,30 @@ module.exports = (jwtOptions, passport) => {
         .post('/funcionarios', passport.authenticate('jwt', { session: false }), (req, res) => funcionarioController.create(req, res))
         .put('/funcionarios/:id', passport.authenticate('jwt', { session: false }), (req, res) => funcionarioController.update(req, res))
         .delete('/funcionarios/:id', passport.authenticate('jwt', { session: false }), (req, res) => funcionarioController.delete(req, res))
+        //LOTES
+        .get('/lotes', passport.authenticate('jwt', { session: false }), (req, res) => loteController.findAll(req, res))
+        .get('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.find(req, res))
+        .post('/lotes', passport.authenticate('jwt', { session: false }), (req, res) => loteController.create(req, res))
+        .put('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.update(req, res))
+        .delete('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.delete(req, res))
         //INSUMOS
-
-    //PRODUTOS
-
-    //PEDIDOS
+        .get('/insumos', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.findAll(req, res))
+        .get('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.find(req, res))
+        .post('/insumos', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.create(req, res))
+        .put('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.update(req, res))
+        .delete('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.delete(req, res))
+        //PRODUTOS
+        // .get('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findAll(req, res))
+        // .get('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.find(req, res))
+        // .post('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.create(req, res))
+        // .put('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.update(req, res))
+        // .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
+        // //PEDIDOS
+        // .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
+        // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
+        // .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))
+        // .put('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.update(req, res))
+        // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
 
 
     /*.get('/clientes', async (req, res) => {

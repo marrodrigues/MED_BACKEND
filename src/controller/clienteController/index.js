@@ -85,8 +85,8 @@ class ClienteController {
 
         clienteService.delete(id)
             .then(result => {
-                if (!result || result === 404) {
-                    res.status(404).send('Cliente não encontrado.')
+                if (!result || result.status === 404) {
+                    res.status(404).send(result.error)
                 } else if (result.status === 500) {
                     res.status(500).send('Erro inesperado.\n' + result.error)
                 } else {

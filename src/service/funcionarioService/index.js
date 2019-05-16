@@ -43,7 +43,7 @@ class FuncionarioService {
         try {
             const result = await this.find(id)
             if (result == null) {
-                return 404
+                return { status: 404, error: 'Funcionário não encontrado.' }
             }
             return await pessoaService.delete(result.pessoaId)
         } catch (error) {
@@ -154,7 +154,7 @@ class FuncionarioService {
             data.payload.pessoa.senha = bcrypt.hashSync(data.payload.pessoa.senha, salt)
             await funcionario.update(data.payload, { where: { id: data.id } })
             await pessoaService.update(data.payload.pessoa)
-            return 200
+            return { status: 204, error: null }
         } catch (error) {
             return { status: 500, error: error }
         }

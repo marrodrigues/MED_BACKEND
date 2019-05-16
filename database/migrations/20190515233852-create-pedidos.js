@@ -1,38 +1,28 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    return queryInterface.createTable('pessoas', {
+    return queryInterface.createTable('insumos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      cpf: {
+      descricao: {
         allowNull: false,
         type: DataTypes.STRING,
         unique: true
       },
-      nome: {
+      qtd_unid: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      unidade: {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      login: {
+      valor_unitario: {
         allowNull: false,
-        type: DataTypes.STRING,
-        unique: true
-      },
-      senha: {
-        allowNull: false,
-        type: DataTypes.STRING,
-      },
-      email: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        unique: true,
-      },
-      dataNascimento: {
-        allowNull: false,
-        type: DataTypes.DATEONLY,
+        type: DataTypes.DOUBLE,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -45,16 +35,24 @@ module.exports = {
         allowNull: false
       },
     }).then(() => {
-      queryInterface.createTable('funcionarios', {
+      queryInterface.createTable('lotes', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
         },
-        cargo: {
+        qtd: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.INTEGER,
+        },
+        validade: {
+          allowNull: false,
+          type: DataTypes.DATEONLY,
+        },
+        valor_total: {
+          allowNull: false,
+          type: DataTypes.DOUBLE,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -66,11 +64,11 @@ module.exports = {
           defaultValue: DataTypes.NOW,
           allowNull: false
         },
-        PessoaId: {
+        InsumoId: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
-            model: 'pessoas',
+            model: 'insumos',
             key: 'id'
           },
           onUpdate: 'CASCADE',
@@ -78,20 +76,32 @@ module.exports = {
         }
       })
     }).then(() => {
-      queryInterface.createTable('clientes', {
+      queryInterface.createTable('produtos', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
         },
-        flag_bloqueado: {
+        nome: {
           allowNull: false,
-          defaultValue: 0,
-          type: DataTypes.INTEGER,
-        },
-        motivo_bloqueio: {
           type: DataTypes.STRING,
+        },
+        descricao: {
+          type: DataTypes.STRING,
+        },
+        tamanho: {
+          type: DataTypes.STRING,
+        },
+        valor: {
+          type: DataTypes.DOUBLE,
+          allowNull: false
+        },
+        lote: {
+          type: DataTypes.STRING,
+        },
+        validade: {
+          type: DataTypes.DATEONLY,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -103,11 +113,55 @@ module.exports = {
           defaultValue: DataTypes.NOW,
           allowNull: false
         },
-        PessoaId: {
+      })
+    }).then(() => {
+      queryInterface.createTable('pedidos', {
+        id: {
+          allowNull: false,
+          autoIncrement: true,
+          primaryKey: true,
+          type: DataTypes.INTEGER
+        },
+        status: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+        },
+        forma_pagamento: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+        },
+        motivo_cancelamento: {
+          type: DataTypes.STRING,
+        },
+        data_pedido: {
+          allowNull: false,
+          type: DataTypes.DATEONLY,
+        },
+        valor_total: {
+          allowNull: false,
+          type: DataTypes.STRING,
+        },
+        observacao: {
+          type: DataTypes.STRING,
+        },
+        funcionarioId: {
+          type: DataTypes.INTEGER,
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+          defaultValue: DataTypes.NOW,
+          allowNull: false
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          defaultValue: DataTypes.NOW,
+          allowNull: false
+        },
+        ClienteId: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
-            model: 'pessoas',
+            model: 'clientes',
             key: 'id'
           },
           onUpdate: 'CASCADE',
@@ -115,41 +169,12 @@ module.exports = {
         }
       })
     }).then(() => {
-      queryInterface.createTable('enderecos', {
+      queryInterface.createTable('insumos_produtos', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
-        },
-        logradouro: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
-        numero: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
-        complemento: {
-          type: DataTypes.STRING,
-        },
-        CEP: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
-        bairro: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
-        cidade: {
-          allowNull: false,
-          type: DataTypes.STRING,
-          defaultValue: 'Rio de Janeiro'
-        },
-        UF: {
-          allowNull: false,
-          type: DataTypes.STRING,
-          defaultValue: 'RJ'
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -161,36 +186,30 @@ module.exports = {
           defaultValue: DataTypes.NOW,
           allowNull: false
         },
-        PessoaId: {
+        InsumoId: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
-            model: 'pessoas',
+            model: 'insumos',
             key: 'id'
           },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        }
+        },
+        produtoId: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          references: {
+            model: 'produtos',
+            key: 'id'
+          },
+        },
       })
     }).then(() => {
-      queryInterface.createTable('telefones', {
+      queryInterface.createTable('pedidos_produtos', {
         id: {
           allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: DataTypes.INTEGER
-        },
-        DDD: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          defaultValue: 21
-        },
-        numero_telefone: {
-          allowNull: false,
-          type: DataTypes.STRING,
-        },
-        tipo: {
-          type: DataTypes.STRING,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -202,25 +221,32 @@ module.exports = {
           defaultValue: DataTypes.NOW,
           allowNull: false
         },
-        PessoaId: {
+        pedidosId: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
-            model: 'pessoas',
+            model: 'pedidos',
             key: 'id'
           },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
-        }
+        },
+        produtoId: {
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          references: {
+            model: 'produtos',
+            key: 'id'
+          },
+        },
       })
     })
   },
 
-  down: (queryInterface) => {
-    return queryInterface.dropTable('clientes')
-          .then(() => {queryInterface.dropTable('funcionarios')})
-          .then(() => {queryInterface.dropTable('enderecos')})
-          .then(() => {queryInterface.dropTable('telefones')})
-          .then(() => {queryInterface.dropTable('pessoas')})
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('insumos_produtos')
+          .then(() => {queryInterface.dropTable('pedidos_produtos')})
+          .then(() => {queryInterface.dropTable('pedidos')})
+          .then(() => {queryInterface.dropTable('produtos')})
+          .then(() => {queryInterface.dropTable('lotes')})
+          .then(() => {queryInterface.dropTable('insumos')})
   }
 };

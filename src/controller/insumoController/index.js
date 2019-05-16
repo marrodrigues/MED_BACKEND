@@ -1,17 +1,17 @@
 const Joi = require('joi');
-const funcionarioService = require('../../service/funcionarioService')
+const insumoService = require('../../service/insumoService')
 
 
-class FuncionarioController {
+class InsumoController {
 
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {
             if (err) {
                 console.log(err)
-                res.status(400).send('Dados inconsistentes ao tentar criar um novo funcionário.')
+                res.status(400).send('Dados inconsistentes ao tentar criar um novo insumo.')
             } else {
-                funcionarioService.create(data)
+                insumoService.create(data)
                     .then(result => {
                         if (!result || result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
@@ -20,16 +20,15 @@ class FuncionarioController {
                         }
                     })
             }
-
         })
     }
 
 
     findAll(req, res) {
-        funcionarioService.findAll()
+        insumoService.findAll()
             .then(result => {
                 if (result.length === 0) {
-                    res.status(404).send('Não foram encontrados funcionários.')
+                    res.status(404).send('Não foram encontrados insumos.')
                 } else if (!result || result.status === 500) {
                     res.status(500).send('Erro inesperado.\n' + result.error)
                 } else {
@@ -41,10 +40,10 @@ class FuncionarioController {
 
     find(req, res) {
         let id = req.params.id;
-        funcionarioService.find(id)
+        insumoService.find(id)
             .then(result => {
                 if (!result) {
-                    res.status(404).send('O funcionário especificado não foi encontrado.')
+                    res.status(404).send('O insumo especificado não foi encontrado.')
                 } else if (result.status === 500) {
                     res.status(500).send('Erro inesperado.\n' + result.error)
                 } else {
@@ -61,16 +60,16 @@ class FuncionarioController {
         }
         this._validate(req, (err, result) => {
             if (err || !data.id) {
-                res.status(400).send('Dados inconsistentes ao tentar atualizar um funcionário.')
+                res.status(400).send('Dados inconsistentes ao tentar atualizar um insumo.')
             } else {
-                funcionarioService.update(data)
+                insumoService.update(data)
                     .then(result => {
                         if (!result) {
-                            res.status(404).send('Funcionário não encontrado.')
+                            res.status(404).send('Insumo não encontrado.')
                         } else if (result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
                         } else {
-                            res.status(204).send('Funcionário atualizado com sucesso.')
+                            res.status(204).json('Insumo atualizado com sucesso.')
                         }
                     })
             }
@@ -80,17 +79,17 @@ class FuncionarioController {
 
     delete(req, res) {
         let id = req.params.id;
-        if (!id) {
-            res.status(400).send('Dados inconsistentes ao tentar excluir funcionário.')
-        }
-        funcionarioService.delete(id)
+        if (!id)
+            res.status(400).send('Dados inconsistentes ao tentar excluir insumo.')
+
+        insumoService.delete(id)
             .then(result => {
                 if (!result || result.status === 404) {
                     res.status(404).send(result.error)
                 } else if (result.status === 500) {
                     res.status(500).send('Erro inesperado.\n' + result.error)
                 } else {
-                    res.status(204).send('Funcionário excluido com sucesso.')
+                    res.status(204).send('Insumo excluido com sucesso.')
                 }
             })
     }
@@ -99,37 +98,35 @@ class FuncionarioController {
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
-            cargo: Joi.string().required(),
-            cpf: Joi.string().required(),
-            nome: Joi.string().required(),
-            login: Joi.string().required(),
-            senha: Joi.string().required(),
-            email: Joi.string().required(),
-            dataNascimento: Joi.date().required(),
-            logradouro: Joi.string().required(),
-            numero: Joi.string().required(),
-            CEP: Joi.string().required(),
-            bairro: Joi.string().required(),
-            numero_telefone: Joi.string().required(),
-            tipo: Joi.string().required()
+            descricao: Joi.string().required(),
+            // nome: Joi.string().required(),
+            // login: Joi.string().required(),
+            // senha: Joi.string().required(),
+            // email: Joi.string().required(),
+            // dataNascimento: Joi.date().required(),
+            // logradouro: Joi.string().required(),
+            // numero: Joi.string().required(),
+            // CEP: Joi.string().required(),
+            // bairro: Joi.string().required(),
+            // numero_telefone: Joi.string().required(),
+            // tipo: Joi.string().required()
         });
         Joi.validate({
-            cargo: req.body.cargo,
-            cpf: req.body.pessoa.cpf,
-            nome: req.body.pessoa.nome,
-            login: req.body.pessoa.login,
-            senha: req.body.pessoa.senha,
-            email: req.body.pessoa.email,
-            dataNascimento: req.body.pessoa.dataNascimento,
-            logradouro: req.body.pessoa.endereco[0].logradouro,
-            numero: req.body.pessoa.endereco[0].numero,
-            CEP: req.body.pessoa.endereco[0].CEP,
-            bairro: req.body.pessoa.endereco[0].bairro,
-            numero_telefone: req.body.pessoa.telefone[0].numero_telefone,
-            tipo: req.body.pessoa.telefone[0].tipo,
+            descricao: req.body.descricao,
+            // nome: req.body.pessoa.nome,
+            // login: req.body.pessoa.login,
+            // senha: req.body.pessoa.senha,
+            // email: req.body.pessoa.email,
+            // dataNascimento: req.body.pessoa.dataNascimento,
+            // logradouro: req.body.pessoa.endereco[0].logradouro,
+            // numero: req.body.pessoa.endereco[0].numero,
+            // CEP: req.body.pessoa.endereco[0].CEP,
+            // bairro: req.body.pessoa.endereco[0].bairro,
+            // numero_telefone: req.body.pessoa.telefone[0].numero_telefone,
+            // tipo: req.body.pessoa.telefone[0].tipo,
         }, schema, cb)
     }
 
 }
 
-module.exports = new FuncionarioController();
+module.exports = new InsumoController();
