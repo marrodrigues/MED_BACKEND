@@ -184,6 +184,10 @@ module.exports = {
           allowNull: false,
           type: DataTypes.INTEGER,
         },
+        qtd: {
+          type: DataTypes.INTEGER,
+          allowNull: false
+        },
         createdAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,

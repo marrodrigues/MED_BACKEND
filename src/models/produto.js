@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     Produto.associate = models => {
-        Produto.belongsToMany(models.insumo, {through: "insumos_produtos", as:"insumos", constraints: false})
+        Produto.belongsToMany(models.insumo, {through: "insumos_produtos", as: "insumos", constraints: false})
         Produto.belongsToMany(models.pedido, {through: "pedidos_produtos"})
+        Produto.hasMany(models.insumos_produto, {as: "insumosProdutos"})
     }
 
     return Produto

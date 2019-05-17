@@ -13,7 +13,11 @@ class ProdutoController {
             } else {
                 produtoService.create(data)
                     .then(result => {
-                        if (!result || result.status === 500) {
+                        if(!result || result.status === 404){
+                            res.status(result.status).send(result.error)
+                        }else if (result.status === 409) {
+                            res.status(result.status).send(result.error)
+                        }else if (result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
                         } else {
                             res.status(201).send(result)
@@ -22,7 +26,6 @@ class ProdutoController {
             }
         })
     }
-
 
     findAll(req, res) {
         produtoService.findAll()
@@ -37,7 +40,6 @@ class ProdutoController {
             })
     }
 
-
     find(req, res) {
         let id = req.params.id;
         produtoService.find(id)
@@ -51,7 +53,6 @@ class ProdutoController {
                 }
             })
     }
-
 
     update(req, res) {
         let data = {
@@ -76,7 +77,6 @@ class ProdutoController {
         })
     }
 
-
     delete(req, res) {
         let id = req.params.id;
         if (!id)
@@ -94,7 +94,16 @@ class ProdutoController {
             })
     }
 
-
+    produtoExiste(req, res){
+        let data = req.body;
+        produtoService.produtoExiste(data).then(result => {
+            if (!result || result.status === 500) {
+                res.status(500).send('Erro inesperado.\n' + result.error)
+            } else {
+                res.status(200).json(result)
+            }
+        })
+    }
 
     _validate(req, cb) {
         const schema = Joi.object().keys({

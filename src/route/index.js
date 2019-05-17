@@ -49,6 +49,7 @@ module.exports = (jwtOptions, passport) => {
         .put('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.update(req, res))
         .delete('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.delete(req, res))
         //PRODUTOS
+        .post('/produtos/existe', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.produtoExiste(req, res))
         .get('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findAll(req, res))
         .get('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.find(req, res))
         .post('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.create(req, res))

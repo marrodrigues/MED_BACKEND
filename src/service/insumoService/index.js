@@ -2,6 +2,10 @@ const { insumo } = require('../../models');
 
 class InsumoService {
 
+    constructor() {
+        this.find = this.find.bind(this) 
+    }
+
     async create(data) {
         try {
             const result = await insumo.create(data)
@@ -48,6 +52,9 @@ class InsumoService {
                 include: [{
                     association: "lote",
                     attributes: { exclude: ["updatedAt", "insumoId"] }
+                },{
+                    association: "insumosProdutos",
+                    attributes: { exclude: ["createdAt","updatedAt"] }
                 }],
                 attributes: { exclude: ["createdAt", "updatedAt"] }
             })
@@ -58,13 +65,14 @@ class InsumoService {
     }
 
     async findInsumos(insumos) {
-        let res = true
-        for(var insumo in insumos){
-            const result = await this.find(insumo.id)
-            if(!result){
-                res = result
+        let res = true;
+        for (var i=0 ; i < insumos.length; i++){
+            const result = await this.find(insumos[i].id)
+                if(!result){
+                    res = false
+                }
             }
-        }
+        console.log(res)
         return res
     }
 
