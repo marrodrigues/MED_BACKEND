@@ -65,8 +65,8 @@ class ProdutoController {
             } else {
                 produtoService.update(data)
                     .then(result => {
-                        if (!result) {
-                            res.status(404).send('Produto não encontrado.')
+                        if (!result || result.status === 404) {
+                            res.status(result.status).send(result.error)
                         } else if (result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
                         } else {

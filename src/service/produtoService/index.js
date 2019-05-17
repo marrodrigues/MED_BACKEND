@@ -7,14 +7,14 @@ class ProdutoService {
 
     async create(data) {
         try {
-            const exist = await this.produtoExiste(data)
+            const existeProduto = await this.produtoExiste(data)
 
-            if (exist)
+            if (existeProduto)
                 return { status: 409, error: 'Produto já cadastrado.' }
 
-            const insumos = await insumoService.findInsumos(data.insumos)
+            const existeInsumos = await insumoService.findInsumos(data.insumos)
 
-            if(!insumos)
+            if(!existeInsumos)
                 return { status: 404, error: 'Insumo não cadastrado.' }
             
             const resultProduto = await produto.create(data)
@@ -42,7 +42,7 @@ class ProdutoService {
             const insumosProdutos = await insumoProdutoService.delete(id)
             if(insumosProdutos.status === 500)
                 return insumosProdutos
-                
+
             return await produto.destroy({
                 where: {
                     id: id
@@ -54,16 +54,21 @@ class ProdutoService {
     }
     
     async find(id) {
-        return new Promise ((resolve, reject) => {
-            produto.findByPk(id, {
+        try {
+            const result = await produto.findByPk(id, {
                 include: [{
                     association: "insumos",
                     attributes: { exclude: ["createdAt", "updatedAt", "produtoId"] }
+                },{
+                    association: "insumosProdutos",
+                    attributes: { exclude: ["createdAt","updatedAt"] }
                 }],
                 attributes: { exclude: ["createdAt", "updatedAt"] }
             })
-            .then(result => resolve(result)).catch(err => reject(err))
-        })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
     }
 
     async findAll() {
@@ -112,8 +117,31 @@ class ProdutoService {
 
     async update(data) {
         try {
+            const existeProduto = await this.find(data.id)
+
+            if (!existeProduto)
+                return { status: 404, error: 'Produto não cadastrado.' }
+
+            const existeInsumos = await insumoService.findInsumos(data.payload.insumos)
+
+            if(!existeInsumos)
+                return { status: 404, error: 'Insumo não cadastrado.' }
+
             await produto.update(data.payload, { where: { id: data.id } })
-            return { status: 204, error: null}
+
+            const insumosProdutos = await insumoProdutoService.delete(data.id)
+            if(insumosProdutos.status === 500)
+                return insumosProdutos
+
+            
+            const result = await insumoProdutoService.create(data.id, data.payload.insumos)
+
+            if(result.status === 200){
+                return { status: 204, error: null}
+            }
+
+            return { status: 500, error: 'Erro inesperado.' }   
+            
         } catch (error) {
             return { status: 500, error: error }
         }
