@@ -1,15 +1,15 @@
 const bcrypt = require('bcrypt')
 
-const { funcionario } = require('../../models');
-const pessoaService = require('../../service/pessoaService')
+const { cliente } = require('../models');
+const pessoaService = require('./pessoaService')
 
-class FuncionarioService {
+class ClienteService {
 
     async create(data) {
         try {
             const salt = bcrypt.genSaltSync(10)
             data.pessoa.senha = bcrypt.hashSync(data.pessoa.senha, salt)
-            const result = await funcionario.create(data, {
+            const result = await cliente.create(data, {
                 include: [{
                     association: "pessoa",
                     include: [
@@ -23,27 +23,27 @@ class FuncionarioService {
             return { status: 500, error: error }
         }
 
-        /*return new Promise((resolve, reject) => {
-            funcionario.create(data, {
-                include:[
-                    {
-                        association: "pessoa",
-                        include:[
-                            "endereco",
-                            "telefone"
-                        ]   
-                    }
-                ]
-            })
-                .then(result => resolve(result)).catch(err => reject(err))
-        })*/
+        // return new Promise((resolve, reject) => {
+        //     cliente.create(data, {
+        //         include:[
+        //             {
+        //                 association: "pessoa",
+        //                 include:[
+        //                     "endereco",
+        //                     "telefone"
+        //                 ]   
+        //             }
+        //         ]
+        //     })
+        //         .then(result => resolve(result)).catch(err => reject(err))
+        // })
     }
 
     async delete(id) {
         try {
             const result = await this.find(id)
             if (result == null) {
-                return { status: 404, error: 'Funcionário não encontrado.' }
+                return { status: 404, error: 'Cliente não encontrado.' }
             }
             return await pessoaService.delete(result.pessoaId)
         } catch (error) {
@@ -53,7 +53,7 @@ class FuncionarioService {
 
     async findAll() {
         try {
-            const result = await funcionario.findAll({
+            const result = await cliente.findAll({
                 include: [{
                     association: "pessoa",
                     include: [
@@ -70,11 +70,11 @@ class FuncionarioService {
         }
 
         /*return new Promise((resolve, reject) => {
-            funcionario.findAll({
+            cliente.findAll({
                 include: [
                     {
                         association: "pessoa",
-                        include: [
+                        include:[
                             "endereco",
                             "telefone"
                         ],
@@ -90,7 +90,7 @@ class FuncionarioService {
 
     async find(id) {
         try {
-            const result = await funcionario.findByPk(id, {
+            const result = await cliente.findByPk(id, {
                 include: [{
                     association: "pessoa",
                     include: [
@@ -107,11 +107,11 @@ class FuncionarioService {
         }
 
         /*return new Promise((resolve, reject) => {
-            funcionario.findByPk(id,{
+            cliente.findByPk(id,{
                 include: [
                     {
                         association: "pessoa",
-                        include: [
+                        include:[
                             "endereco",
                             "telefone"
                         ],
@@ -120,14 +120,14 @@ class FuncionarioService {
                 ],
                 attributes: { exclude: ["createdAt", "updatedAt"] }
             })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        }) */
+            .then(result => resolve(result))
+            .catch(err => reject(err))
+        })*/
     }
 
     async findByPessoaId(id) {
         try {
-            const result = await funcionario.findOne({
+            const result = await cliente.findOne({
                 where: {
                     pessoaId: id
                 }
@@ -138,7 +138,7 @@ class FuncionarioService {
         }
 
         /*return new Promise((resolve, reject) => {
-            funcionario.findOne({
+            cliente.findOne({
                 where: {
                     pessoaId: id
                 }
@@ -152,7 +152,7 @@ class FuncionarioService {
         try {
             const salt = bcrypt.genSaltSync(10)
             data.payload.pessoa.senha = bcrypt.hashSync(data.payload.pessoa.senha, salt)
-            await funcionario.update(data.payload, { where: { id: data.id } })
+            await cliente.update(data.payload, { where: { id: data.id } })
             await pessoaService.update(data.payload.pessoa)
             return { status: 204, error: null }
         } catch (error) {
@@ -160,7 +160,7 @@ class FuncionarioService {
         }
 
         /*return new Promise((resolve, reject) => {
-            funcionario.update(data.payload, { where:{id: data.id} })
+            cliente.update(data.payload, { where:{id: data.id} })
                 .then(result => pessoaService.update(data.payload.pessoa))
                 .then(result => resolve(result))
                 .catch(err => reject(err))
@@ -169,4 +169,4 @@ class FuncionarioService {
 
 }
 
-module.exports = new FuncionarioService();
+module.exports = new ClienteService();

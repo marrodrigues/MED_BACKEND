@@ -1,4 +1,6 @@
-const { insumo } = require('../../models');
+const { insumo } = require('../models');
+
+const loteService = require('./loteService')
 
 class InsumoService {
 
@@ -64,6 +66,19 @@ class InsumoService {
         }
     }
 
+    async findByDescricao(data) {
+        try {
+            const result = await insumo.findOne({
+                where: {
+                    descricao: data
+                }
+            })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
+
     async findInsumos(insumos) {
         let res = true;
         for (var i=0 ; i < insumos.length; i++){
@@ -78,7 +93,16 @@ class InsumoService {
 
     async update(data) {
         try {
+            const existeInsumo = await this.find(data.id)
+
+            if (!existeInsumo)
+                return { status: 404, error: 'Insumo não cadastrado.' }
+
             await insumo.update(data.payload, { where: { id: data.id } })
+            let lotes = await loteService.findByInsumoId(data.id)
+                lotes.map(async lote => {
+                    await loteService.update(lote)
+                })
             return { status: 204, error: null}
         } catch (error) {
             return { status: 500, error: error }

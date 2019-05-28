@@ -1,4 +1,4 @@
-const { insumos_produto } = require('../../models');
+const { insumos_produto } = require('../models');
 
 // const insumoService = require('../insumoService')
 

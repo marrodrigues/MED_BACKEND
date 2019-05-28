@@ -1,5 +1,5 @@
-const clienteService = require('../../service/clienteService')
-const funcionarioService = require('../../service/funcionarioService')
+const clienteService = require('./clienteService')
+const funcionarioService = require('./funcionarioService')
 
 class LoginService {
 

@@ -21,9 +21,9 @@ module.exports = (jwtOptions, passport) => {
         .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
         .get('/logout', (req, res) => { res.status(200).send({ auth: false, token: null }) })
         //PESSOA
-        .get('/valida/cpf/:cpf', (req, res) => pessoaController.findByCPF(req, res))
-        .get('/valida/email/:email', (req, res) => pessoaController.findByEmail(req, res))
-        .get('/valida/login/:login', (req, res) => pessoaController.findByLogin(req, res))
+        .get('/pessoas/cpf/:cpf', (req, res) => pessoaController.findByCPF(req, res))
+        .get('/pessoas/email/:email', (req, res) => pessoaController.findByEmail(req, res))
+        .get('/pessoas/login/:login', (req, res) => pessoaController.findByLogin(req, res))
         //CLIENTES
         .get('/clientes', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.findAll(req, res))
         .get('/clientes/:id', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.find(req, res))
@@ -39,23 +39,26 @@ module.exports = (jwtOptions, passport) => {
         //LOTES
         .get('/lotes', passport.authenticate('jwt', { session: false }), (req, res) => loteController.findAll(req, res))
         .get('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.find(req, res))
+        .get('/lotes/lote/:lote', passport.authenticate('jwt', { session: false }), (req, res) => loteController.findByLote(req, res))
         .post('/lotes', passport.authenticate('jwt', { session: false }), (req, res) => loteController.create(req, res))
         .put('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.update(req, res))
         .delete('/lotes/:id', passport.authenticate('jwt', { session: false }), (req, res) => loteController.delete(req, res))
         //INSUMOS
         .get('/insumos', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.findAll(req, res))
         .get('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.find(req, res))
+        .get('/insumos/descricao/:descricao', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.findByDescricao(req, res))
         .post('/insumos', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.create(req, res))
         .put('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.update(req, res))
         .delete('/insumos/:id', passport.authenticate('jwt', { session: false }), (req, res) => insumoController.delete(req, res))
         //PRODUTOS
-        .post('/produtos/existe', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.produtoExiste(req, res))
         .get('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findAll(req, res))
         .get('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.find(req, res))
+        .get('/produtos/nome/:nome', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findByNome(req, res))
+        .get('/produtos/nome/:nome/tamanho/:tamanho', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.findByNome(req, res))
         .post('/produtos', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.create(req, res))
         .put('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.update(req, res))
         .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
-        // //PEDIDOS
+        //PEDIDOS
         // .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
         // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
         // .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))

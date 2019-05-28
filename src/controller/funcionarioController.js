@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const funcionarioService = require('../../service/funcionarioService')
+const funcionarioService = require('../service/funcionarioService')
 
 
 class FuncionarioController {

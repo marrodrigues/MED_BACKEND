@@ -46,6 +46,11 @@ module.exports = {
           allowNull: false,
           type: DataTypes.INTEGER,
         },
+        lote: {
+          allowNull: false,
+          type: DataTypes.STRING,
+          unique: true
+        },
         validade: {
           allowNull: false,
           type: DataTypes.DATEONLY,
@@ -65,14 +70,10 @@ module.exports = {
           allowNull: false
         },
         InsumoId: {
-          allowNull: false,
           type: DataTypes.INTEGER,
-          references: {
-            model: 'insumos',
-            key: 'id'
-          },
-          onUpdate: 'CASCADE',
-          onDelete: 'CASCADE'
+        },
+        ProdutoId: {
+          type: DataTypes.INTEGER,
         }
       })
     }).then(() => {
@@ -87,21 +88,13 @@ module.exports = {
           allowNull: false,
           type: DataTypes.STRING,
         },
-        descricao: {
-          type: DataTypes.STRING,
-        },
         tamanho: {
+          allowNull: false,
           type: DataTypes.STRING,
         },
         valor: {
           type: DataTypes.DOUBLE,
           allowNull: false
-        },
-        lote: {
-          type: DataTypes.STRING,
-        },
-        validade: {
-          type: DataTypes.DATEONLY,
         },
         createdAt: {
           type: DataTypes.DATE,

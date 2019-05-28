@@ -1,4 +1,4 @@
-const { pessoa, endereco, telefone } = require('../../models')
+const { pessoa, endereco, telefone } = require('../models')
     //const clienteService = require('../../service/clienteService')
     //const funcionarioService = require('../../service/funcionarioService')
 

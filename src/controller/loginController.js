@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
-const pessoaService = require('../../service/pessoaService')
-const loginService = require('../../service/loginService')
+const pessoaService = require('../service/pessoaService')
+const loginService = require('../service/loginService')
 
 class LoginController {
 
