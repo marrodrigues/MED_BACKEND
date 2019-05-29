@@ -2,35 +2,35 @@ const { lote, insumo, produto } = require('../models');
 
 class LoteService {
 
-    async calculaValorLote(data){
+    async validaLote(data){
         if(data.insumoId){
             const insumoResult = await insumo.findByPk(data.insumoId)
             if (!insumoResult){
                 return { status: 404, error: "O insumo do lote em questão não foi encontrado."}
             }
-            data.valor_total = insumoResult.valor_unitario * data.qtd
-            return {
-                id: data.id,
-                lote: data.lote,
-                qtd: data.qtd,
-                validade: data.validade,
-                valor_total: data.valor_total,
-                insumoId: data.insumoId
-            }
+            // data.valor_total = insumoResult.valor_unitario * data.qtd
+            // return {
+            //     id: data.id,
+            //     lote: data.lote,
+            //     qtd: data.qtd,
+            //     validade: data.validade,
+            //     valor_total: data.valor_total,
+            //     insumoId: data.insumoId
+            // }
         } else if (data.produtoId) {
             const produtoResult = await produto.findByPk(data.produtoId)
             if (!produtoResult){
                 return { status: 404, error: "O produto do lote em questão não foi encontrado."}
             }
-            data.valor_total = produtoResult.valor * data.qtd
-            return {
-                id: data.id,
-                lote: data.lote,
-                qtd: data.qtd,
-                validade: data.validade,
-                valor_total: data.valor_total,
-                produtoId: data.produtoId
-            }
+            // data.valor_total = produtoResult.valor * data.qtd
+            // return {
+            //     id: data.id,
+            //     lote: data.lote,
+            //     qtd: data.qtd,
+            //     validade: data.validade,
+            //     valor_total: data.valor_total,
+            //     produtoId: data.produtoId
+            // }
         } else {
             return { status: 400, error: "É necessário referênciar um produto ou um insumo para criação de um lote."}
         }
@@ -38,14 +38,17 @@ class LoteService {
 
     async create(data) {
         try {
-            const result = await this.calculaValorLote(data)
+            let valid = await this.validaLote(data)
 
-            const valid = this.findByLote(result.lote)
+            if(valid) 
+                return valid
+
+            valid = this.findByLote(data.lote)
             if(!valid){
                 return { status: 409, error: "O lote em questão já foi cadastrado."}
             }
 
-            const created = await lote.create(result)
+            const created = await lote.create(data)
             return created
         } catch (error) {
             return { status: 500, error: error }
@@ -133,9 +136,12 @@ class LoteService {
 
     async update(data) {
         try {
-            const result = await this.calculaValorLote(data)
-            const r = await lote.update(result, { where: { id: data.id } })
-            console.log(r)
+            let valid = await this.validaLote(data)
+
+            if(valid) 
+                return valid
+
+            await lote.update(data, { where: { id: data.id } })
             return { status: 204, error: null }
         } catch (error) {
             return { status: 500, error: error }

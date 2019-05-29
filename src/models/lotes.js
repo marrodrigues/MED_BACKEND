@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         lote: DataTypes.STRING,
         qtd:  DataTypes.INTEGER,
         validade: DataTypes.DATEONLY,
-        valor_total: DataTypes.DOUBLE,
+        valor_unitario: DataTypes.DOUBLE,
     })
 
     return Lote

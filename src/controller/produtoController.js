@@ -129,32 +129,14 @@ class ProdutoController {
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
-            descricao: Joi.string().required(),
-            // nome: Joi.string().required(),
-            // login: Joi.string().required(),
-            // senha: Joi.string().required(),
-            // email: Joi.string().required(),
-            // dataNascimento: Joi.date().required(),
-            // logradouro: Joi.string().required(),
-            // numero: Joi.string().required(),
-            // CEP: Joi.string().required(),
-            // bairro: Joi.string().required(),
-            // numero_telefone: Joi.string().required(),
-            // tipo: Joi.string().required()
+            nome: Joi.string().required(),
+            tamanho: Joi.string().required(),
+            valor: Joi.number().required(),
         });
         Joi.validate({
-            descricao: req.body.nome,
-            // nome: req.body.pessoa.nome,
-            // login: req.body.pessoa.login,
-            // senha: req.body.pessoa.senha,
-            // email: req.body.pessoa.email,
-            // dataNascimento: req.body.pessoa.dataNascimento,
-            // logradouro: req.body.pessoa.endereco[0].logradouro,
-            // numero: req.body.pessoa.endereco[0].numero,
-            // CEP: req.body.pessoa.endereco[0].CEP,
-            // bairro: req.body.pessoa.endereco[0].bairro,
-            // numero_telefone: req.body.pessoa.telefone[0].numero_telefone,
-            // tipo: req.body.pessoa.telefone[0].tipo,
+            nome: req.body.nome,
+            tamanho: req.body.tamanho,
+            valor: req.body.valor,
         }, schema, cb)
     }
 

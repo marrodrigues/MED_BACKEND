@@ -20,10 +20,6 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      valor_unitario: {
-        allowNull: false,
-        type: DataTypes.DOUBLE,
-      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -55,7 +51,7 @@ module.exports = {
           allowNull: false,
           type: DataTypes.DATEONLY,
         },
-        valor_total: {
+        valor_unitario: {
           allowNull: false,
           type: DataTypes.DOUBLE,
         },

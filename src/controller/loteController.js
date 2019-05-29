@@ -81,8 +81,12 @@ class LoteController {
                     .then(result => {
                         if (!result) {
                             res.status(404).send('Lote não encontrado.')
+                        } else if (result.status === 400) {
+                            res.status(result.status).send(result.error)
+                        } else if (result.status === 404) {
+                            res.status(result.status).send(result.error)
                         } else if (result.status === 500) {
-                            res.status(500).send('Erro inesperado.\n' + result.error)
+                            res.status(result.status).send('Erro inesperado.\n' + result.error)
                         } else {
                             res.status(204).json('Lote atualizado com sucesso.')
                         }
@@ -113,32 +117,16 @@ class LoteController {
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
+            lote: Joi.string().required(),
             qtd: Joi.number().required(),
-            // nome: Joi.string().required(),
-            // login: Joi.string().required(),
-            // senha: Joi.string().required(),
-            // email: Joi.string().required(),
-            // dataNascimento: Joi.date().required(),
-            // logradouro: Joi.string().required(),
-            // numero: Joi.string().required(),
-            // CEP: Joi.string().required(),
-            // bairro: Joi.string().required(),
-            // numero_telefone: Joi.string().required(),
-            // tipo: Joi.string().required()
+            validade: Joi.date().required(),
+            valor_unitario: Joi.number().required()
         });
         Joi.validate({
+            lote: req.body.lote,
             qtd: req.body.qtd,
-            // nome: req.body.pessoa.nome,
-            // login: req.body.pessoa.login,
-            // senha: req.body.pessoa.senha,
-            // email: req.body.pessoa.email,
-            // dataNascimento: req.body.pessoa.dataNascimento,
-            // logradouro: req.body.pessoa.endereco[0].logradouro,
-            // numero: req.body.pessoa.endereco[0].numero,
-            // CEP: req.body.pessoa.endereco[0].CEP,
-            // bairro: req.body.pessoa.endereco[0].bairro,
-            // numero_telefone: req.body.pessoa.telefone[0].numero_telefone,
-            // tipo: req.body.pessoa.telefone[0].tipo,
+            validade: req.body.validade,
+            valor_unitario: req.body.valor_unitario
         }, schema, cb)
     }
 

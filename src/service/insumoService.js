@@ -38,7 +38,7 @@ class InsumoService {
             const result = await insumo.findByPk(id, {
                 include: [{
                     association: "lote",
-                    attributes: { exclude: ["updatedAt", "insumoId"] }
+                    attributes: { exclude: ["updatedAt", "insumoId", "produtoId"] }
                 }],
                 attributes: { exclude: ["createdAt", "updatedAt"] }
             })
@@ -53,10 +53,7 @@ class InsumoService {
             const result = await insumo.findAll({
                 include: [{
                     association: "lote",
-                    attributes: { exclude: ["updatedAt", "insumoId"] }
-                },{
-                    association: "insumosProdutos",
-                    attributes: { exclude: ["createdAt","updatedAt"] }
+                    attributes: { exclude: ["updatedAt", "insumoId", "produtoId"] }
                 }],
                 attributes: { exclude: ["createdAt", "updatedAt"] }
             })

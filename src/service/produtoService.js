@@ -147,7 +147,7 @@ class ProdutoService {
 
                 await produto.update(data.payload, { where: { id: data.id } })
 
-                const insumosProdutos = await insumoProdutoService.delete(data.id)
+                const insumosProdutos = await insumoProdutoService.delete(data.id) // verificar se os lotes não estão sendo excluidos
                 if(insumosProdutos.status === 500)
                     return insumosProdutos
 
@@ -156,11 +156,11 @@ class ProdutoService {
             } else {
                 await produto.update(data.payload, { where: { id: data.id } })
 
-                let lotes = await loteService.findByProdutoId(data.id)
+                // let lotes = await loteService.findByProdutoId(data.id)
 
-                lotes.map(async lote => {
-                    await loteService.update(lote)
-                })
+                // lotes.map(async lote => {
+                //     await loteService.update(lote)
+                // })
             }
 
             return { status: 200, error: null }   
