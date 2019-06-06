@@ -1,13 +1,18 @@
 module.exports = (sequelize, DataTypes) => {
     const Pedido = sequelize.define('pedido', {
-        descricao:DataTypes.STRING,
-        qtd_unid: DataTypes.INTEGER,
-        unidade: DataTypes.STRING,
-        valor_unitario: DataTypes.DOUBLE
+        codigo: DataTypes.STRING,
+        status: DataTypes.INTEGER,
+        forma_pagamento: DataTypes.INTEGER,
+        motivo_cancelamento: DataTypes.STRING,
+        data_pedido: DataTypes.DATEONLY,
+        valor_total: DataTypes.DOUBLE,
+        observacao: DataTypes.STRING,
+        funcionarioId: DataTypes.INTEGER
     })
 
     Pedido.associate = models => {
-        Pedido.belongsToMany(models.produto, {through: "pedido_produto"})
+        Pedido.belongsToMany(models.produto, {through: "pedidos_produtos", as: "produtos", constraints: false})
+        Pedido.hasMany(models.pedidos_produto, {as: "pedidosProdutos"})
     }
 
     return Pedido

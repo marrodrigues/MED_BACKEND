@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const PedidoProduto = sequelize.define('pedido_produto', {
+    const PedidoProduto = sequelize.define('pedidos_produto', {
     })
 
     return PedidoProduto

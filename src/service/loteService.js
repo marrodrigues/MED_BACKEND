@@ -1,8 +1,43 @@
 const { lote, insumo, produto } = require('../models');
+const sequelize = require('sequelize');
+
 
 class LoteService {
 
+    async consumirEstoque (data){
+        if(data.insumosProdutos){
+            data.insumosProdutos.map(async insProd =>{
+                const lotes = await this.findByInsumoId(insProd.insumoId)
+                let updateLote = {
+                    lote: lotes[0].lote,
+                    qtd:  lotes[0].qtd - insProd.valor_unitario,
+                    validade: lotes[0].validade,
+                    valor_unitario: lotes[0].valor_unitario,
+                    insumoId: lotes[0].insumoId,
+                    produtoId: lotes[0].produtoId
+                }
+                await this.update(updateLote)
+            })
+        } else{
+            const lotes = await this.findByProdutoId(data.id)
+            let updateLote = {
+                lote: lotes[0].lote,    
+                qtd:  lotes[0].qtd - 1,
+                validade: lotes[0].validade,
+                valor_unitario: lotes[0].valor_unitario,
+                insumoId: lotes[0].insumoId,
+                produtoId: lotes[0].produtoId
+            }
+            await this.update(updateLote)
+        }
+        
+    }
+
     async validaLote(data){
+        const valid = await this.findByLote(data.lote)
+        if(valid)
+            return { status: 409, error: "O lote em questão já possui cadastro."}
+
         if(data.insumoId){
             const insumoResult = await insumo.findByPk(data.insumoId)
             if (!insumoResult){
@@ -89,13 +124,45 @@ class LoteService {
         }
     }
 
+    async findTotalQtdByInsumoId(id){
+        return await lote.findAll({
+            where: {
+                insumoId: id,
+                validade: {
+                    [sequelize.Op.gte]: new Date()
+                }
+            },
+            attributes: [[sequelize.fn('sum', sequelize.col('qtd')), 'sumQtd']],
+            raw: true
+        });
+    }
+
+    async findTotalQtdByProdutoId(id){
+        return await lote.findAll({
+            where: {
+                produtoId: id,
+                validade: {
+                    [sequelize.Op.gte]: new Date()
+                }
+            },
+            attributes: [[sequelize.fn('sum', sequelize.col('qtd')), 'sumQtd']],
+            raw: true
+        });
+    }
+
     async findByInsumoId(id) {
         try {
             const result = await lote.findAll( 
                 {
                     where: {
-                        insumoId: id
-                    }
+                        insumoId: id,
+                        validade: {
+                            [sequelize.Op.gte]: new Date()
+                        }
+                    },
+                    order:[
+                        ['validade','ASC']
+                    ]
                 }
             )
             return result
@@ -125,7 +192,10 @@ class LoteService {
                 {
                     where: {
                         produtoId: id
-                    }
+                    },
+                    order:[
+                        ['validade','ASC']
+                    ]
                 }
             )
             return result

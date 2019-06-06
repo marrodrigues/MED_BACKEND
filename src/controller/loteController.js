@@ -4,6 +4,19 @@ const loteService = require('../service/loteService')
 
 class LoteController {
 
+    mario(req, res) {
+        loteService.findTotalQtdByProdutoId(492)
+            .then(result => {
+                if (!result) {
+                    res.status(404).send('O lote especificado não foi encontrado.')
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(200).json(result)
+                }
+            })
+    }
+
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {

@@ -8,7 +8,7 @@ const pessoaController = require('../controller/pessoaController')
 const loteController = require('../controller/loteController')
 const insumoController = require('../controller/insumoController')
 const produtoController = require('../controller/produtoController')
-// const pedidoController = require('../controller/pedidoController')
+const pedidoController = require('../controller/pedidoController')
 
 module.exports = (jwtOptions, passport) => {
     router
@@ -17,6 +17,8 @@ module.exports = (jwtOptions, passport) => {
         .get('/', (req, res) => {
             res.status(200).json({ status: 'MED API está online!', time: new Date() });
         })
+        .get('/mario', (req, res) => 
+        loteController.mario(req,res))
         // LOGIN
         .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
         .get('/logout', (req, res) => { res.status(200).send({ auth: false, token: null }) })
@@ -61,40 +63,10 @@ module.exports = (jwtOptions, passport) => {
         //PEDIDOS
         // .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
         // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
-        // .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))
+        // .get('/pedidos/codigo/:codigo', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findByCodigo(req, res))
+        .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))
         // .put('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.update(req, res))
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
-
-
-    /*.get('/clientes', async (req, res) => {
-        const pessoas = await Pessoa.findAll()
-        res.status(200).json(pessoas)
-    }) //Listar pessoas
-
-    .post('/clientes', async (req, res) => {
-        const response = await Pessoa.create(req.body)
-        res.status(201).json(response)
-    }) //Criar pessoa
-
-    .get('/clientes/:id', async (req, res) => {
-        const pessoa = await Pessoa.findByPk(req.params.id)
-        if(!pessoa) res.status(404).json('Cliente não encontrado')
-        res.status(200).json(pessoa)
-    }) //Buscar pessoa
-
-    .put('/clientes/:id', async (req, res) => {
-        await Pessoa.update(req.body, {where:{id: req.params.id} })
-        res.status(204).json('Cliente atualizado')
-    }) //Atualizar pessoa
-
-    .delete('/clientes/:id', async (req, res) => {
-        await Pessoa.destroy({
-            where: {
-                id: req.params.id
-            }
-        })
-        res.status(204).json('Cliente deletado')
-    }) //Excluir pessoa*/
 
     return router
 }

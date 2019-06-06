@@ -120,6 +120,9 @@ class ProdutoService {
                 include: [{
                     association: "insumos",
                     attributes: { exclude: ["createdAt", "updatedAt", "produtoId"] }
+                },{
+                    association: "insumosProdutos",
+                    attributes: { exclude: ["createdAt","updatedAt"] }
                 }],
                 where: {
                     nome: produtoNovo.nome,

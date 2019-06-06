@@ -111,6 +111,10 @@ module.exports = {
           primaryKey: true,
           type: DataTypes.INTEGER
         },
+        codigo:{
+          allowNull: false,
+          type: DataTypes.STRING,
+        },
         status: {
           allowNull: false,
           type: DataTypes.INTEGER,
@@ -128,7 +132,7 @@ module.exports = {
         },
         valor_total: {
           allowNull: false,
-          type: DataTypes.STRING,
+          type: DataTypes.DOUBLE,
         },
         observacao: {
           type: DataTypes.STRING,
@@ -146,7 +150,7 @@ module.exports = {
           defaultValue: DataTypes.NOW,
           allowNull: false
         },
-        ClienteId: {
+        clienteId: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
