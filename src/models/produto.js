@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         nome:DataTypes.STRING,
         tamanho: DataTypes.STRING,
         valor: DataTypes.DOUBLE,
+        tipo: DataTypes.INTEGER
     })
 
     Produto.associate = models => {

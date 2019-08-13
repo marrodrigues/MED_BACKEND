@@ -132,11 +132,13 @@ class ProdutoController {
             nome: Joi.string().required(),
             tamanho: Joi.string().required(),
             valor: Joi.number().required(),
+            tipo: Joi.number().required()
         });
         Joi.validate({
             nome: req.body.nome,
             tamanho: req.body.tamanho,
             valor: req.body.valor,
+            tipo: req.body.tipo
         }, schema, cb)
     }
 

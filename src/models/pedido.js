@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     Pedido.associate = models => {
         Pedido.belongsToMany(models.produto, {through: "pedidos_produtos", as: "produtos", constraints: false})
         Pedido.hasMany(models.pedidos_produto, {as: "pedidosProdutos"})
+        Pedido.belongsTo(models.cliente, {as: "cliente"})
     }
 
     return Pedido
