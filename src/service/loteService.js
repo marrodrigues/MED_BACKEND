@@ -3,7 +3,6 @@ const sequelize = require('sequelize');
 
 
 class LoteService {
-
     async consumirEstoque (data){
         if(data.insumosProdutos){
             data.insumosProdutos.map(async insProd =>{
@@ -34,10 +33,6 @@ class LoteService {
     }
 
     async validaLote(data){
-        const valid = await this.findByLote(data.lote)
-        if(valid)
-            return { status: 409, error: "O lote em questão já possui cadastro."}
-
         if(data.insumoId){
             const insumoResult = await insumo.findByPk(data.insumoId)
             if (!insumoResult){
@@ -73,18 +68,17 @@ class LoteService {
 
     async create(data) {
         try {
-            let valid = await this.validaLote(data)
+            let valid = await this.findByLote(data.lote)
+            if(valid) {
+                return { status: 409, error: "O lote em questão já foi cadastrado."}
+            }
+
+            valid = await this.validaLote(data)
 
             if(valid) 
                 return valid
 
-            valid = this.findByLote(data.lote)
-            if(!valid){
-                return { status: 409, error: "O lote em questão já foi cadastrado."}
-            }
-
-            const created = await lote.create(data)
-            return created
+            return await lote.create(data)
         } catch (error) {
             return { status: 500, error: error }
         }
@@ -206,13 +200,22 @@ class LoteService {
 
     async update(data) {
         try {
-            let valid = await this.validaLote(data)
-
-            if(valid) 
-                return valid
-
-            await lote.update(data, { where: { id: data.id } })
-            return { status: 204, error: null }
+            let valid = await this.findByLote(data.lote)
+            
+            if(valid)
+            {
+                valid = await this.validaLote(data)
+                
+                if(valid && valid.status) 
+                    return valid
+                
+                await lote.update(data, { where: { id: data.id } })
+                return { status: 204, error: null }
+            }
+            else
+            {
+                return { status: 404, error: "Lote não encontrado"}
+            }
         } catch (error) {
             return { status: 500, error: error }
         }

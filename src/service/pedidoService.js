@@ -9,36 +9,36 @@ const pedidoProdutoService = require('./pedidoProdutoService')
 class PedidoService {
 
     async validaPedido(data) {
-        let validProd = []
-        let validInsProd = []
+        let invalidProd = []
+        let invalidInsProd = []
         for (var i = 0; i < data.produtos; i++) {
-            const produto = await produtoService.findByNomeAndTamanho(data.produtos[i])
+            const produto = await produtoService.find(data.produtos[i].id)
             if (!produto) {
-                validProd.push(data.produtos[i])
+                invalidProd.push(data.produtos[i])
             } else {
                 if (produto.insumosProdutos) {
                     insumosProdutos.map(async insProd => {
                         const qtdEstoque = loteService.findTotalQtdByInsumoId(insProd.insumoId)
                         if (qtdEstoque[0].sumQtd < insProd.qtd)
-                            validInsProd.push(insProd)
+                            invalidInsProd.push(insProd)
                     })
                 } else {
                     const qtdEstoque = loteService.findTotalQtdByProdutoId(produto.id)
                     if (qtdEstoque[0].sumQtd < produto.qtd)
-                        validInsProd.push(produto)
+                        invalidInsProd.push(produto)
                 }
             }
         }
-        if (!validProd)
+        if (invalidProd)
             return {
                 status: 404,
-                error: "Produto(s) não cadastrado(s): \n" + validProd
+                error: "Produto(s) não cadastrado(s): \n" + invalidProd
             }
 
-        if (!validInsProd)
+        if (invalidInsProd)
             return {
                 status: 409,
-                error: "O estoque não possui insumos suficientes: \n" + validInsProd
+                error: "O estoque não possui insumos suficientes: \n" + invalidInsProd
             }
 
         return {
@@ -175,7 +175,7 @@ class PedidoService {
     //             return { status: 404, error: 'Pedido não cadastrado.' }
 
     //         if(data.insumos){
-    //             const existeInsumos = await insumoService.findInsumos(data.payload.insumos)
+    //             const existeInsumos = await insumoService.insumosExist(data.payload.insumos)
 
     //             if(!existeInsumos)
     //                 return { status: 404, error: 'Insumo não cadastrado.' }

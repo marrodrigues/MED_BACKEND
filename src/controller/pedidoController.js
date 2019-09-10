@@ -28,18 +28,18 @@ class PedidoController {
     }
 
 
-    // findAll(req, res) {
-    //     pedidoService.findAll()
-    //         .then(result => {
-    //             if (result.length === 0) {
-    //                 res.status(404).send('Não foram encontrados pedidos.')
-    //             } else if (!result || result.status === 500) {
-    //                 res.status(500).send('Erro inesperado.\n' + result.error)
-    //             } else {
-    //                 res.status(200).json(result)
-    //             }
-    //         })
-    // }
+    findAll(req, res) {
+        pedidoService.findAll()
+            .then(result => {
+                if (result.length === 0) {
+                    res.status(404).send('Não foram encontrados pedidos.')
+                } else if (!result || result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(200).json(result)
+                }
+            })
+    }
 
 
     // find(req, res) {

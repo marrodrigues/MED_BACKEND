@@ -3,30 +3,16 @@ const loteService = require('../service/loteService')
 
 
 class LoteController {
-
-    mario(req, res) {
-        loteService.findTotalQtdByProdutoId(492)
-            .then(result => {
-                if (!result) {
-                    res.status(404).send('O lote especificado não foi encontrado.')
-                } else if (result.status === 500) {
-                    res.status(500).send('Erro inesperado.\n' + result.error)
-                } else {
-                    res.status(200).json(result)
-                }
-            })
-    }
-
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {
             if (err) {
                 console.log(err)
                 res.status(400).send('Dados inconsistentes ao tentar criar um novo lote.')
-            } else {
-                loteService.create(data)
-                    .then(result => {
-                        if (!result || result.status === 404){
+            } 
+            else {
+                loteService.create(data).then(result => {
+                        if (!result || result.status === 404) {
                             res.status(result.status).send(result.error)
                         } else if (result.status === 409) {
                             res.status(result.status).send(result.error)
@@ -35,11 +21,10 @@ class LoteController {
                         } else {
                             res.status(201).send(result)
                         }
-                    })
+                })
             }
         })
     }
-
 
     findAll(req, res) {
         loteService.findAll()
@@ -53,7 +38,6 @@ class LoteController {
                 }
             })
     }
-
 
     find(req, res) {
         let id = req.params.id;
@@ -108,7 +92,6 @@ class LoteController {
         })
     }
 
-
     delete(req, res) {
         let id = req.params.id;
         if (!id)
@@ -126,8 +109,6 @@ class LoteController {
             })
     }
 
-
-
     _validate(req, cb) {
         const schema = Joi.object().keys({
             lote: Joi.string().required(),
@@ -142,7 +123,5 @@ class LoteController {
             valor_unitario: req.body.valor_unitario
         }, schema, cb)
     }
-
 }
-
 module.exports = new LoteController();

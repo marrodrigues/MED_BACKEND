@@ -17,8 +17,6 @@ module.exports = (jwtOptions, passport) => {
         .get('/', (req, res) => {
             res.status(200).json({ status: 'MED API está online!', time: new Date() });
         })
-        .get('/mario', (req, res) => 
-        loteController.mario(req,res))
         // LOGIN
         .post('/login', (req, res) => loginController.login(req, res, jwtOptions))
         .get('/logout', (req, res) => { res.status(200).send({ auth: false, token: null }) })
@@ -61,7 +59,7 @@ module.exports = (jwtOptions, passport) => {
         .put('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.update(req, res))
         .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
         //PEDIDOS
-        // .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
+        .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
         // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
         // .get('/pedidos/codigo/:codigo', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findByCodigo(req, res))
         .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))

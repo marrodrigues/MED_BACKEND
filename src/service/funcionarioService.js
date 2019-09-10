@@ -20,7 +20,8 @@ class FuncionarioService {
             })
             return result
         } catch (error) {
-            return { status: 500, error: error }
+            return error.message === "Validation error" ? 
+                        {status: 400, error: error} : { status: 500, error: error }
         }
 
         /*return new Promise((resolve, reject) => {
@@ -150,6 +151,11 @@ class FuncionarioService {
 
     async update(data) {
         try {
+            const func = await pessoaService.find(data.payload.pessoa.id)
+            if(!func) {
+                return { status: 404 , error: 'Funcionário não encontrado.'}
+            }
+
             const salt = bcrypt.genSaltSync(10)
             data.payload.pessoa.senha = bcrypt.hashSync(data.payload.pessoa.senha, salt)
             await funcionario.update(data.payload, { where: { id: data.id } })

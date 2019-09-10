@@ -24,7 +24,7 @@ class LoginController {
                         })
                     })
                 })
-                .catch(err => res.status(503).send(`Serviço indisponível, erro: ${err}`))
+                .catch(err => res.status(500).send(`Serviço indisponível, erro: ${err}`))
         }
     }
 

@@ -76,14 +76,14 @@ class InsumoService {
         }
     }
 
-    async findInsumos(insumos) {
+    async insumosExist(insumos) {
         let res = true;
-        for (var i=0 ; i < insumos.length; i++){
+        insumos.map(async i =>{
             const result = await this.find(insumos[i].id)
-                if(!result){
-                    res = false
-                }
+            if(!result){
+                res = false
             }
+        })
         console.log(res)
         return res
     }

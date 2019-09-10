@@ -15,7 +15,13 @@ class FuncionarioController {
                     .then(result => {
                         if (!result || result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
-                        } else {
+                        } 
+                        else if (result.status === 400)
+                        {
+                            res.status(result.status).send(result.error)
+                        }
+                        else
+                        {
                             res.status(201).send(result)
                         }
                     })
@@ -65,7 +71,7 @@ class FuncionarioController {
             } else {
                 funcionarioService.update(data)
                     .then(result => {
-                        if (!result) {
+                        if (!result || result.status === 404) {
                             res.status(404).send('Funcionário não encontrado.')
                         } else if (result.status === 500) {
                             res.status(500).send('Erro inesperado.\n' + result.error)
