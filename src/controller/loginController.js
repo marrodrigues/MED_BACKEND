@@ -20,7 +20,7 @@ class LoginController {
                         const token = jwt.sign(payload, jwtOptions.secretOrKey)
                         loginService.getRole(payload.id).then(perfil => {
                             if (perfil.role === 'Erro na busca') res.status(404).send('Perfil não encontrado.')
-                            res.status(200).json({ msg: 'OK', token: token, role: perfil.role })
+                            res.status(200).json({ id: pessoa.id, msg: 'OK', token: token, role: perfil.role })
                         })
                     })
                 })
