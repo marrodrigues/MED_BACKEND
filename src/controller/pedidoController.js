@@ -117,15 +117,15 @@ class PedidoController {
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
+            clienteId: Joi.number().required(),
             codigo: Joi.string().required(),
             forma_pagamento: Joi.number().required(),
-            clienteId: Joi.number().required(),
             produtos: Joi.array().required()
         });
         Joi.validate({
+            clienteId: req.body.clienteId,
             codigo: req.body.codigo,
             forma_pagamento: req.body.forma_pagamento,
-            clienteId: req.body.clienteId,
             produtos: req.body.produtos
         }, schema, cb)
     }

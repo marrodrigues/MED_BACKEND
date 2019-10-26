@@ -347,7 +347,7 @@ module.exports = {
         },
         data_pedido: {
           allowNull: false,
-          type: DataTypes.DATEONLY
+          type: DataTypes.DATE
         },
         valor_total: {
           allowNull: false,

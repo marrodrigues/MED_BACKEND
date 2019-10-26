@@ -15,16 +15,6 @@ class PessoaService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            pessoa.destroy({
-                    where: {
-                        id: id
-                    }
-                })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async find(id) {
@@ -40,18 +30,6 @@ class PessoaService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            pessoa.findByPk(id, {
-                    include: [
-                        "endereco",
-                        "telefone"
-                    ],
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
-                })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async findByCPF(cpf) {
@@ -70,21 +48,6 @@ class PessoaService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            pessoa.findOne({
-                    include: [
-                        "endereco",
-                        "telefone"
-                    ],
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
-                    where: {
-                        cpf: cpf
-                    }
-                })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async findByEmail(email) {
@@ -103,21 +66,6 @@ class PessoaService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            pessoa.findOne({
-                    include: [
-                        "endereco",
-                        "telefone"
-                    ],
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
-                    where: {
-                        email: email
-                    }
-                })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async findByLogin(login) {
@@ -136,21 +84,6 @@ class PessoaService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            pessoa.findOne({
-                    include: [
-                        "endereco",
-                        "telefone"
-                    ],
-                    attributes: { exclude: ["createdAt", "updatedAt"] },
-                    where: {
-                        login: login
-                    }
-                })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async update(data) {

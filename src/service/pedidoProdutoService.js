@@ -5,7 +5,7 @@ const { pedidos_produto } = require('../models');
 class PedidoProdutoService {
     async create(pedidoId, produtos){
         let inserts = []
-        produtos.map(produto => {
+        await produtos.map(async produto => {
             let data = {
                 produtoId: produto.id,
                 pedidoId: pedidoId,

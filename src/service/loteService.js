@@ -3,34 +3,6 @@ const sequelize = require('sequelize');
 
 
 class LoteService {
-    async consumirEstoque (data){
-        if(data.insumosProdutos){
-            data.insumosProdutos.map(async insProd =>{
-                const lotes = await this.findByInsumoId(insProd.insumoId)
-                let updateLote = {
-                    lote: lotes[0].lote,
-                    qtd:  lotes[0].qtd - insProd.valor_unitario,
-                    validade: lotes[0].validade,
-                    valor_unitario: lotes[0].valor_unitario,
-                    insumoId: lotes[0].insumoId,
-                    produtoId: lotes[0].produtoId
-                }
-                await this.update(updateLote)
-            })
-        } else{
-            const lotes = await this.findByProdutoId(data.id)
-            let updateLote = {
-                lote: lotes[0].lote,    
-                qtd:  lotes[0].qtd - 1,
-                validade: lotes[0].validade,
-                valor_unitario: lotes[0].valor_unitario,
-                insumoId: lotes[0].insumoId,
-                produtoId: lotes[0].produtoId
-            }
-            await this.update(updateLote)
-        }
-        
-    }
 
     async validaLote(data){
         if(data.insumoId){
@@ -75,7 +47,7 @@ class LoteService {
 
             valid = await this.validaLote(data)
 
-            if(valid) 
+            if(valid && valid.status) 
                 return valid
 
             return await lote.create(data)
@@ -200,20 +172,17 @@ class LoteService {
 
     async update(data) {
         try {
-            let valid = await this.findByLote(data.lote)
-            
-            if(valid)
-            {
-                valid = await this.validaLote(data)
-                
+            const oldLote = await this.findByLote(data.lote)
+            if(oldLote){
+                let valid = await this.validaLote(data)
+                    
                 if(valid && valid.status) 
                     return valid
-                
-                await lote.update(data, { where: { id: data.id } })
+                    
+                await lote.update(data, { where: { id: oldLote.id } })
                 return { status: 204, error: null }
             }
-            else
-            {
+            else {
                 return { status: 404, error: "Lote não encontrado"}
             }
         } catch (error) {

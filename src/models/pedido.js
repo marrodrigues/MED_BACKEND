@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
         status: DataTypes.INTEGER,
         forma_pagamento: DataTypes.INTEGER,
         motivo_cancelamento: DataTypes.STRING,
-        data_pedido: DataTypes.DATEONLY,
+        data_pedido: DataTypes.DATE,
         valor_total: DataTypes.DOUBLE,
         observacao: DataTypes.STRING,
         funcionarioId: DataTypes.INTEGER
