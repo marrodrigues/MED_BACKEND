@@ -146,7 +146,7 @@ class PedidoService {
         }
     }
 
-    // async delete(id) {
+    // async cancelar(id) {
     //     try {
     //         const result = await this.find(id)
     //         if (result == null) {
@@ -162,7 +162,6 @@ class PedidoService {
     //                 await loteService.delete(lote.id)
     //             })
     //         }
-
     //         return await pedido.destroy({
     //             where: {
     //                 id: id
@@ -173,58 +172,57 @@ class PedidoService {
     //     }
     // }
 
-    // async find(id) {
-    //     try {
-    //         const result = await pedido.findByPk(id, {
-    //             include: [{
-    //                 association: "insumos",
-    //                 attributes: { exclude: ["createdAt", "updatedAt", "pedidoId"] }
-    //             },{
-    //                 association: "insumosPedidos",
-    //                 attributes: { exclude: ["createdAt","updatedAt"] }
-    //             }],
-    //             attributes: { exclude: ["createdAt", "updatedAt"] }
-    //         })
-    //         return result
-    //     } catch (error) {
-    //         return { status: 500, error: error }
-    //     }
-    // }
+    async find(id) {
+        try {
+            const result = await pedido.findByPk(id, {
+                include: [{
+                    association: "pedidosProdutos",
+                    attributes: { exclude: ["id","createdAt", "updatedAt", "pedidoId"] }
+                }],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
+            })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
 
-    // async findAll() {
-    //     try {
-    //         const result = await pedido.findAll({
-    //             include: [{
-    //                 association: "insumos",
-    //                 attributes: { exclude: ["createdAt", "updatedAt", "pedidoId"] }
-    //             },{
-    //                 association: "insumosPedidos",
-    //                 attributes: { exclude: ["createdAt","updatedAt"] }
-    //             }],
-    //             attributes: { exclude: ["createdAt", "updatedAt"] }
-    //         })
-    //         return result
-    //     } catch (error) {
-    //         return { status: 500, error: error }
-    //     }
-    // }
+    async findAll() {
+        try {
+            const result = await pedido.findAll({
+                include: [{
+                    association: "pedidosProdutos",
+                    attributes: { 
+                        exclude: ["id","createdAt", "updatedAt", "pedidoId"] 
+                    }
+                }],
+                attributes: { exclude: ["createdAt", "updatedAt"] }
+            })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
 
-    // async findByNome(pedidoNovo){
-    //     try {
-    //         const result =  await pedido.findAll({
-    //             include: [{
-    //                 association: "insumos",
-    //                 attributes: { exclude: ["createdAt", "updatedAt", "pedidoId"] }
-    //             }],
-    //             where: {
-    //                 nome: pedidoNovo.nome,
-    //             }
-    //         })
-    //         return result
-    //     } catch (error) {
-    //         return { status: 500, error: error }
-    //     }
-    // }
+    async findByCodigo(codigo){
+        try {
+            const result =  await pedido.findAll({
+                include: [{
+                    association: "pedidosProdutos",
+                    attributes: { 
+                        exclude: ["id","createdAt", "updatedAt", "pedidoId"] 
+                    }
+                }],
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+                where: {
+                    codigo: codigo,
+                }
+            })
+            return result
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
 
     // async findByNomeAndTamanho(pedidoNovo){
     //     try {

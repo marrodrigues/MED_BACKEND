@@ -60,8 +60,8 @@ module.exports = (jwtOptions, passport) => {
         .delete('/produtos/:id', passport.authenticate('jwt', { session: false }), (req, res) => produtoController.delete(req, res))
         //PEDIDOS
         .get('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findAll(req, res))
-        // .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
-        // .get('/pedidos/codigo/:codigo', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findByCodigo(req, res))
+        .get('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.find(req, res))
+        .get('/pedidos/codigo/:codigo', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findByCodigo(req, res))
         .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))
         // .put('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.update(req, res))
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
