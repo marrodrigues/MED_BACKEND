@@ -20,6 +20,15 @@ class PedidoProdutoService {
             return { status: 200, error: null}
         }
     }
+
+    async deleteByPedidoId(pedidoId) {
+        try {
+            await pedidos_produto.destroy({where: {pedidoId: pedidoId}})
+            return { status: 200, error: null}
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
 }
 
 module.exports = new PedidoProdutoService();

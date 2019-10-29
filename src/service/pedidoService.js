@@ -52,6 +52,7 @@ class PedidoService {
         let updateLote = {}
         let updated = false
         let valorPedido = 0
+        let sobra = 0
         for(let i = 0; i < data.length; i++){
             const resultProduto = await produtoService.find(data[i].id)
             if(!resultProduto || resultProduto.status == 500){
@@ -61,6 +62,7 @@ class PedidoService {
                 for(let j = 0; j < resultProduto.insumosProdutos.length ; j++){
                     const lotes = await loteService.findByInsumoId(resultProduto.insumosProdutos[j].insumoId)
                     for(let k = 0; k < lotes.length ; k++) {
+                        lotes[k].qtd += sobra
                         if(lotes[k].qtd > resultProduto.insumosProdutos[j].qtd && !updated){
                             updateLote = {
                                 lote: lotes[k].lote,
@@ -71,10 +73,13 @@ class PedidoService {
                                 produtoId: lotes[k].produtoId
                             }
                             updated = true
-                        } 
+                        } else {
+                            sobra += lotes[k].qtd
+                        }
+
                     }
                     if(!updated){
-                        return {status: 400, error: 'Não existe lote para o produto: ' + resultProduto.nome}
+                        return {status: 404, error: 'Não existe lote para o produto: ' + resultProduto.nome}
                     }
                     updateList.push(updateLote)
                     updated = false
@@ -82,6 +87,7 @@ class PedidoService {
             } else {
                 const lotes = await loteService.findByProdutoId(resultProduto.id)
                 for(let j = 0; j < lotes.length ; j++) {
+                    lotes[j].qtd += sobra
                     if(lotes[j].qtd >  data[i].qtd && !updated){
                         updateLote = {
                             lote: lotes[j].lote,    
@@ -92,10 +98,12 @@ class PedidoService {
                             produtoId: lotes[j].produtoId
                         }
                         updated = true
-                    } 
+                    } else [
+                        sobra += lotes[j].qtd
+                    ] 
                 }
                 if(!updated){
-                    return {status: 400, error: 'Não existe lote para o produto: ' + resultProduto.nome}
+                    return {status: 404, error: 'Não existe lote para o produto: ' + resultProduto.nome}
                 }
                 updateList.push(updateLote)
             }
@@ -105,7 +113,50 @@ class PedidoService {
         for(let i = 0; i < updateList.length ; i++) {
             loteService.update(updateList[i]) 
         }
-        // updateList.map(async lote => { await loteService.update(lote) })
+        return {status: 200, valorPedido: valorPedido}
+    }
+
+    async retornarEstoque (data){
+        let updateList = []
+        let updateLote = {}
+        for(let i = 0; i < data.length; i++) {
+            const resultProduto = await produtoService.find(data[i].id)
+            if(!resultProduto || resultProduto.status == 500){
+                return {status: 404, error: 'O produto ' + data[i].nome + ' não foi encontrado.'}
+            }
+            if(resultProduto.tipo == 1) {
+                for(let j = 0; j < resultProduto.insumosProdutos.length ; j++){
+                    const lotes = await loteService.findByInsumoId(resultProduto.insumosProdutos[j].insumoId)
+                    if(lotes.length == 0)
+                        return {status: 404, error: 'Não foi encontrado lote cadastrado para o insumo com o identificador: ' + resultProduto.insumosProdutos[j].insumoId + '.'}
+                    updateLote = {
+                        lote: lotes[0].lote,
+                        qtd:  lotes[0].qtd + resultProduto.insumosProdutos[j].qtd,
+                        validade: lotes[0].validade,
+                        valor_unitario: lotes[0].valor_unitario,
+                        insumoId: lotes[0].insumoId,
+                        produtoId: lotes[0].produtoId
+                    }
+                    updateList.push(updateLote)
+                }
+            } else {
+                const lotes = await loteService.findByProdutoId(resultProduto.id)
+                if(lotes.length == 0)
+                        return {status: 404, error: 'Não foi encontrado lote cadastrado para o produto: ' + resultProduto.nome + '.'}
+                updateLote = {
+                    lote: lotes[0].lote,    
+                    qtd:  lotes[0].qtd + data[i].qtd,
+                    validade: lotes[0].validade,
+                    valor_unitario: lotes[0].valor_unitario,
+                    insumoId: lotes[0].insumoId,
+                    produtoId: lotes[0].produtoId
+                }
+                updateList.push(updateLote)
+            }
+        }
+        for(let i = 0; i < updateList.length ; i++) {
+            loteService.update(updateList[i]) 
+        }
         return {status: 200, valorPedido: valorPedido}
     }
 
@@ -146,31 +197,23 @@ class PedidoService {
         }
     }
 
-    // async cancelar(id) {
-    //     try {
-    //         const result = await this.find(id)
-    //         if (result == null) {
-    //             return { status: 404, error: "O pedido em questão não foi encontrado."}
-    //         }
-    //         if(result.insumos.length > 0){
-    //             const insumosPedidos = await insumoPedidoService.delete(id)
-    //             if(insumosPedidos.status === 500)
-    //                 return insumosPedidos
-    //         } else {
-    //             const lotes = await loteService.findByPedidoId(id)
-    //             lotes.map(async lote => {
-    //                 await loteService.delete(lote.id)
-    //             })
-    //         }
-    //         return await pedido.destroy({
-    //             where: {
-    //                 id: id
-    //             }
-    //         })
-    //     } catch (error) {
-    //         return { status: 500, error: error }
-    //     }
-    // }
+    async cancelar(data) { // TESTAR
+        try {
+            const result = await this.find(data.id)
+            if (result == null) 
+                return { status: 404, error: "O pedido em questão não foi encontrado."}
+            
+            if(result.status != 1)
+                return { status: 400, error: "Status do pedido diferente de em confecção (1)"}
+
+            result.motivo_cancelamento = data.motivo_cancelamento
+            result.status = 4
+
+            return await pedido.update(result, {where: {id: data.id}})
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
 
     async find(id) {
         try {
@@ -224,56 +267,52 @@ class PedidoService {
         }
     }
 
-    // async findByNomeAndTamanho(pedidoNovo){
-    //     try {
-    //         const result =  await pedido.findOne({
-    //             include: [{
-    //                 association: "insumos",
-    //                 attributes: { exclude: ["createdAt", "updatedAt", "pedidoId"] }
-    //             }],
-    //             where: {
-    //                 nome: pedidoNovo.nome,
-    //                 tamanho: pedidoNovo.tamanho,
-    //             }
-    //         })
-    //         return result
-    //     } catch (error) {
-    //         return { status: 500, error: error }
-    //     }
-    // }
+    async update(data) { // TESTAR
+        try {
+            const valid = await this.validaPedido(data)
+            if (valid.status != 200)
+                return valid
 
-    // async update(data) {
-    //     try {
-    //         const existePedido = await this.find(data.id)
+            const existePedido = await this.find(data.id)
+            if (!existePedido)
+                return { status: 404, error: 'Pedido não cadastrado.' }
+            
+            const resultRetorno = await this.retornarEstoque(existePedido.produtos)
+            if(resultRetorno.status != 200)
+                return resultRetorno
 
-    //         if (!existePedido)
-    //             return { status: 404, error: 'Pedido não cadastrado.' }
+            const resultConsumo = await this.consumirEstoque(data.produtos)
+            if(resultConsumo.status != 200)
+                return resultConsumo
 
-    //         if(data.insumos){
-    //             const existeInsumos = await insumoService.insumosExist(data.payload.insumos)
+            const novoPedido = {
+                "id": data.id,
+                "clienteId": data.clienteId,
+                "funcionarioId": data.funcionarioId,
+                "codigo": existePedido.codigo,
+                "forma_pagamento": data.forma_pagamento,
+                "observacao": data.observacao,
+                "produtos": data.produtos,
+                "status": 1,
+                "data_pedido": new Date(),
+                "valor_total": resultConsumo.valorPedido
+            }
 
-    //             if(!existeInsumos)
-    //                 return { status: 404, error: 'Insumo não cadastrado.' }
+            const resultPedido = await pedido.update(novoPedido, {where: {id:novoPedido.id}})
+            const resultDelete = await pedidoProdutoService.deleteByPedidoId(resultPedido.id)
+            
+            if (resultDelete.status != 200)
+                return resultDelete
 
-    //             await pedido.update(data.payload, { where: { id: data.id } })
-
-    //             const insumosPedidos = await insumoPedidoService.delete(data.id) // verificar se os lotes não estão sendo excluidos
-    //             if(insumosPedidos.status === 500)
-    //                 return insumosPedidos
-
-    //             await insumoPedidoService.create(data.id, data.payload.insumos)
-
-    //         } else {
-    //             await pedido.update(data.payload, { where: { id: data.id } })
-    //         }
-
-    //         return { status: 200, error: null }   
-
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { status: 500, error: error }
-    //     }
-    // }
+            const result = await pedidoProdutoService.create(resultPedido.id, data.produtos)
+            
+            if (result.status === 200)
+                return { status: 204, error: null }   
+        } catch (error) {
+            console.log(error)
+            return { status: 500, error: error }
+        }
+    }
 
 }
 

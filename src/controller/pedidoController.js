@@ -4,6 +4,25 @@ const pedidoService = require('../service/pedidoService')
 
 class PedidoController {
 
+    cancelar(req, res) {
+        let id = req.params.id;
+        let data = req.body
+        if (!id)
+            res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
+        
+        data.id = id
+        pedidoService.cancelar(data)
+            .then(result => {
+                if (!result || result.status === 404) {
+                    res.status(404).send('Pedido não encontrado.')
+                } else if (result.status === 500) {
+                    res.status(500).send('Erro inesperado.\n' + result.error)
+                } else {
+                    res.status(204).send('Pedido cancelado com sucesso.')
+                }
+            })
+    }
+
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {
@@ -94,25 +113,6 @@ class PedidoController {
     //         }
     //     })
     // }
-
-
-    // cancelar(req, res) {
-    //     let id = req.params.id;
-    //     if (!id)
-    //         res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
-    //     pedidoService.delete(id)
-    //         .then(result => {
-    //             if (!result || result.status === 404) {
-    //                 res.status(404).send('Pedido não encontrado.')
-    //             } else if (result.status === 500) {
-    //                 res.status(500).send('Erro inesperado.\n' + result.error)
-    //             } else {
-    //                 res.status(204).send('Pedido excluido com sucesso.')
-    //             }
-    //         })
-    // }
-
-
 
     _validate(req, cb) {
         const schema = Joi.object().keys({

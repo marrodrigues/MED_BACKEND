@@ -64,6 +64,7 @@ module.exports = (jwtOptions, passport) => {
         .get('/pedidos/codigo/:codigo', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.findByCodigo(req, res))
         .post('/pedidos', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.create(req, res))
         // .put('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.update(req, res))
+        .put('/pedidos/:id/cancelar', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.cancelar(req, res))
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
 
     return router
