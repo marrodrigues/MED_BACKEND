@@ -1,6 +1,4 @@
-const {
-    pedido
-} = require('../models');
+const {pedido} = require('../models');
 
 const produtoService = require('./produtoService')
 const loteService = require('./loteService')
@@ -37,7 +35,7 @@ class PedidoService {
 
         if (invalidInsProd.length > 0)
             return {
-                status: 409,
+                status: 400,
                 error: "O estoque não possui insumos suficientes: \n" + invalidInsProd
             }
 
@@ -66,7 +64,7 @@ class PedidoService {
                         if(lotes[k].qtd > resultProduto.insumosProdutos[j].qtd && !updated){
                             updateLote = {
                                 lote: lotes[k].lote,
-                                qtd:  lotes[k].qtd - resultProduto.insumosProdutos[j].qtd,
+                                qtd:  lotes[k].qtd - resultProduto.insumosProdutos[j].qtd * data[i].qtd,
                                 validade: lotes[k].validade,
                                 valor_unitario: lotes[k].valor_unitario,
                                 insumoId: lotes[k].insumoId,
@@ -120,7 +118,7 @@ class PedidoService {
         let updateList = []
         let updateLote = {}
         for(let i = 0; i < data.length; i++) {
-            const resultProduto = await produtoService.find(data[i].id)
+            const resultProduto = await produtoService.find(data[i].produtoId)
             if(!resultProduto || resultProduto.status == 500){
                 return {status: 404, error: 'O produto ' + data[i].nome + ' não foi encontrado.'}
             }
@@ -131,7 +129,7 @@ class PedidoService {
                         return {status: 404, error: 'Não foi encontrado lote cadastrado para o insumo com o identificador: ' + resultProduto.insumosProdutos[j].insumoId + '.'}
                     updateLote = {
                         lote: lotes[0].lote,
-                        qtd:  lotes[0].qtd + resultProduto.insumosProdutos[j].qtd,
+                        qtd:  lotes[0].qtd + resultProduto.insumosProdutos[j].qtd * data[i].qtd,
                         validade: lotes[0].validade,
                         valor_unitario: lotes[0].valor_unitario,
                         insumoId: lotes[0].insumoId,
@@ -155,9 +153,9 @@ class PedidoService {
             }
         }
         for(let i = 0; i < updateList.length ; i++) {
-            loteService.update(updateList[i]) 
+            await loteService.update(updateList[i]) 
         }
-        return {status: 200, valorPedido: valorPedido}
+        return {status: 200}
     }
 
     async create(data) {
@@ -206,10 +204,22 @@ class PedidoService {
             if(result.status != 1)
                 return { status: 400, error: "Status do pedido diferente de em confecção (1)"}
 
-            result.motivo_cancelamento = data.motivo_cancelamento
-            result.status = 4
-
-            return await pedido.update(result, {where: {id: data.id}})
+            const updatePedido = {
+                "id": result.id,
+                "clienteId": result.clienteId,
+                "funcionarioId": result.funcionarioId,
+                "codigo": result.codigo,
+                "forma_pagamento": result.forma_pagamento,
+                "observacao": result.observacao,
+                "produtos": result.produtos,
+                "status": 4,
+                "valor_total": result.valorPedido,
+                "motivo_cancelamento": data.motivo_cancelamento
+            }
+            
+            const updateResult = await pedido.update(updatePedido, {where: {id: result.id}})
+            if(updateResult > 0)
+                return {status: 200}
         } catch (error) {
             return { status: 500, error: error }
         }
@@ -267,7 +277,7 @@ class PedidoService {
         }
     }
 
-    async update(data) { // TESTAR
+    async update(data) { 
         try {
             const valid = await this.validaPedido(data)
             if (valid.status != 200)
@@ -277,7 +287,7 @@ class PedidoService {
             if (!existePedido)
                 return { status: 404, error: 'Pedido não cadastrado.' }
             
-            const resultRetorno = await this.retornarEstoque(existePedido.produtos)
+            const resultRetorno = await this.retornarEstoque(existePedido.pedidosProdutos)
             if(resultRetorno.status != 200)
                 return resultRetorno
 
@@ -298,13 +308,14 @@ class PedidoService {
                 "valor_total": resultConsumo.valorPedido
             }
 
-            const resultPedido = await pedido.update(novoPedido, {where: {id:novoPedido.id}})
-            const resultDelete = await pedidoProdutoService.deleteByPedidoId(resultPedido.id)
+            await pedido.update(novoPedido, {where: {id:novoPedido.id}})
+            
+            const resultDelete = await pedidoProdutoService.deleteByPedidoId(data.id)
             
             if (resultDelete.status != 200)
                 return resultDelete
 
-            const result = await pedidoProdutoService.create(resultPedido.id, data.produtos)
+            const result = await pedidoProdutoService.create(data.id, data.produtos)
             
             if (result.status === 200)
                 return { status: 204, error: null }   

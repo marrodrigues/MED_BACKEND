@@ -9,18 +9,16 @@ class PedidoController {
         let data = req.body
         if (!id)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
-        
         data.id = id
-        pedidoService.cancelar(data)
-            .then(result => {
-                if (!result || result.status === 404) {
-                    res.status(404).send('Pedido não encontrado.')
-                } else if (result.status === 500) {
-                    res.status(500).send('Erro inesperado.\n' + result.error)
-                } else {
-                    res.status(204).send('Pedido cancelado com sucesso.')
-                }
-            })
+        pedidoService.cancelar(data).then(result => {
+            if (!result || result.status === 404) {
+                res.status(404).send('Pedido não encontrado.')
+            } else if (result.status === 500) {
+                res.status(500).send('Erro inesperado.\n' + result.error)
+            } else {
+                res.status(204).send('Pedido cancelado com sucesso.')
+            }
+        })
     }
 
     create(req, res) {
@@ -34,7 +32,7 @@ class PedidoController {
                     .then(result => {
                         if (!result || result.status === 404){
                             res.status(result.status).send(result.error)
-                        } else if (result.status === 409) {
+                        } else if (result.status === 400) {
                             res.status(result.status).send(result.error)
                         } else if (result.status === 500) {
                             res.status(result.status).send('Erro inesperado.\n' + result.error)
@@ -89,30 +87,21 @@ class PedidoController {
             })
     }
 
-    // update(req, res) {
-    //     let data = req.body
-    //     data.id = req.params.id
-    //     this._validate(req, (err, result) => {
-    //         if (err || !data.id) {
-    //             res.status(400).send('Dados inconsistentes ao tentar atualizar um pedido.')
-    //         } else {
-    //             pedidoService.update(data)
-    //                 .then(result => {
-    //                     if (!result) {
-    //                         res.status(404).send('Pedido não encontrado.')
-    //                     } else if (result.status === 400) {
-    //                         res.status(result.status).send(result.error)
-    //                     } else if (result.status === 404) {
-    //                         res.status(result.status).send(result.error)
-    //                     } else if (result.status === 500) {
-    //                         res.status(result.status).send('Erro inesperado.\n' + result.error)
-    //                     } else {
-    //                         res.status(204).json('Pedido atualizado com sucesso.')
-    //                     }
-    //                 })
-    //         }
-    //     })
-    // }
+    update(req, res) {
+        let data = req.body
+        data.id = req.params.id
+        pedidoService.update(data).then(result => {
+            if (!result || result.status === 404) {
+                res.status(404).send(result.error)
+            } else if (result.status === 400) {
+                res.status(result.status).send(result.error)
+            } else if (result.status === 500) {
+                res.status(result.status).send('Erro inesperado.\n' + result.error)
+            } else {
+                res.status(204).json('Pedido atualizado com sucesso.')
+            }
+        })
+    }
 
     _validate(req, cb) {
         const schema = Joi.object().keys({
