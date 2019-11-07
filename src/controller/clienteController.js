@@ -4,6 +4,38 @@ const clienteService = require('../service/clienteService')
 
 class ClienteController {
 
+    block(req, res) {
+        let id = req.params.id;
+        let data = req.body
+        if (!id)
+            res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
+        data.id = id
+        clienteService.block(data).then(result => {
+            if (!result || result.status === 404) {
+                res.status(404).send('Cliente não encontrado.')
+            } else if (result.status === 500) {
+                res.status(500).send('Erro inesperado.\n' + result.error)
+            } else {
+                res.status(204).send('Cliente bloqueado com sucesso.')
+            }
+        })
+    }
+
+    unblock(req, res) {
+        let id = req.params.id;
+        if (!id)
+            res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
+        clienteService.unblock(id).then(result => {
+            if (!result || result.status === 404) {
+                res.status(404).send('Cliente não encontrado.')
+            } else if (result.status === 500) {
+                res.status(500).send('Erro inesperado.\n' + result.error)
+            } else {
+                res.status(204).send('Cliente desbloqueado com sucesso.')
+            }
+        })
+    }
+
     create(req, res) {
         let data = req.body;
         this._validate(req, (err, result) => {
@@ -23,7 +55,6 @@ class ClienteController {
         })
     }
 
-
     findAll(req, res) {
         clienteService.findAll()
             .then(result => {
@@ -38,7 +69,6 @@ class ClienteController {
             .catch(err => res.status(500).send('Busca por clientes negada.\n' + err))
     }
 
-
     find(req, res) {
         let id = req.params.id;
         clienteService.find(id)
@@ -52,7 +82,6 @@ class ClienteController {
                 }
             })
     }
-
 
     update(req, res) {
         let data = {
@@ -77,7 +106,6 @@ class ClienteController {
         })
     }
 
-
     delete(req, res) {
         let id = req.params.id;
         if (!id)
@@ -94,8 +122,6 @@ class ClienteController {
                 }
             })
     }
-
-
 
     _validate(req, cb) {
         const schema = Joi.object().keys({

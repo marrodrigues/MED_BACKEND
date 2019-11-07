@@ -29,6 +29,8 @@ module.exports = (jwtOptions, passport) => {
         .get('/clientes/:id', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.find(req, res))
         .post('/clientes', (req, res) => clienteController.create(req, res))
         .put('/clientes/:id', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.update(req, res))
+        .put('/clientes/:id/block', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.block(req, res))
+        .put('/clientes/:id/unblock', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.unblock(req, res))
         .delete('/clientes/:id', passport.authenticate('jwt', { session: false }), (req, res) => clienteController.delete(req, res))
         //FUNCIONARIOS
         .get('/funcionarios', passport.authenticate('jwt', { session: false }), (req, res) => funcionarioController.findAll(req, res))

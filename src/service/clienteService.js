@@ -5,6 +5,48 @@ const pessoaService = require('./pessoaService')
 
 class ClienteService {
 
+    async block(data){
+        try {
+            const result = await this.find(data.id)
+            if (result == null) 
+                return { status: 404, error: "O cliente em questão não foi encontrado."}
+            
+            const updateCliente = {
+                "id": result.id,
+                "pessoaId": result.pessoaId,
+                "flag_bloqueado": 1,
+                "motivo_bloqueio": data.motivo_bloqueio
+            }
+            
+            const updateResult = await cliente.update(updateCliente, {where: {id: result.id}})
+            if(updateResult > 0)
+                return {status: 200}
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
+
+    async unblock(id){
+        try {
+            const result = await this.find(id)
+            if (result == null) 
+                return { status: 404, error: "O cliente em questão não foi encontrado."}
+            
+            const updateCliente = {
+                "id": result.id,
+                "pessoaId": result.pessoaId,
+                "flag_bloqueado": 0,
+                "motivo_bloqueio": null
+            }
+            
+            const updateResult = await cliente.update(updateCliente, {where: {id: result.id}})
+            if(updateResult > 0)
+                return {status: 200}
+        } catch (error) {
+            return { status: 500, error: error }
+        }
+    }
+
     async create(data) {
         try {
             const salt = bcrypt.genSaltSync(10)
@@ -22,21 +64,6 @@ class ClienteService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        // return new Promise((resolve, reject) => {
-        //     cliente.create(data, {
-        //         include:[
-        //             {
-        //                 association: "pessoa",
-        //                 include:[
-        //                     "endereco",
-        //                     "telefone"
-        //                 ]   
-        //             }
-        //         ]
-        //     })
-        //         .then(result => resolve(result)).catch(err => reject(err))
-        // })
     }
 
     async delete(id) {
@@ -68,24 +95,6 @@ class ClienteService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            cliente.findAll({
-                include: [
-                    {
-                        association: "pessoa",
-                        include:[
-                            "endereco",
-                            "telefone"
-                        ],
-                        attributes: { exclude: ["createdAt", "updatedAt"] }
-                    }
-                ],
-                attributes: { exclude: ["createdAt", "updatedAt"] }
-            })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async find(id) {
@@ -105,24 +114,6 @@ class ClienteService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            cliente.findByPk(id,{
-                include: [
-                    {
-                        association: "pessoa",
-                        include:[
-                            "endereco",
-                            "telefone"
-                        ],
-                        attributes: { exclude: ["createdAt", "updatedAt"] }
-                    }
-                ],
-                attributes: { exclude: ["createdAt", "updatedAt"] }
-            })
-            .then(result => resolve(result))
-            .catch(err => reject(err))
-        })*/
     }
 
     async findByPessoaId(id) {
@@ -136,16 +127,6 @@ class ClienteService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            cliente.findOne({
-                where: {
-                    pessoaId: id
-                }
-            })
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
 
     async update(data) {
@@ -158,15 +139,7 @@ class ClienteService {
         } catch (error) {
             return { status: 500, error: error }
         }
-
-        /*return new Promise((resolve, reject) => {
-            cliente.update(data.payload, { where:{id: data.id} })
-                .then(result => pessoaService.update(data.payload.pessoa))
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-        })*/
     }
-
 }
 
 module.exports = new ClienteService();
