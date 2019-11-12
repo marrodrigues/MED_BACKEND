@@ -71,6 +71,7 @@ module.exports = (jwtOptions, passport) => {
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
         // RELATÓRIOS
         .get('/info/vendas/produtos/:type/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByProducts(req, res))
+        .get('/info/vendas/clientes/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByClients(req, res))
 
     return router
 }

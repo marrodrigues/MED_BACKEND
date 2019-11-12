@@ -6,7 +6,7 @@ class RelatorioController {
         let startDate = req.params.startDate + ' 00:00:01';
         let endDate = req.params.endDate + ' 23:59:59';
         let type = req.params.type;
-        if (!startDate || !endDate)
+        if (!startDate || !endDate || !type)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
         let data = {
             "startDate": startDate,
@@ -22,6 +22,22 @@ class RelatorioController {
         })
     }
 
+    findSellingsByClients(req, res) {
+        let startDate = req.params.startDate + ' 00:00:01';
+        let endDate = req.params.endDate + ' 23:59:59';
+        if (!startDate || !endDate)
+            res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
+        let data = {
+            "startDate": startDate,
+            "endDate": endDate,
+        }
+        relatorioService.findSellingsByClients(data).then(result => {
+            if (!result || result.status === 404) {
+                res.status(404).send('Sem dados de vendas no período.')
+            } else {
+                res.status(200).send(result)
+            }
+        })
+    }
 }
-
 module.exports = new RelatorioController();
