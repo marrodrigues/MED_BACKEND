@@ -9,6 +9,7 @@ const loteController = require('../controller/loteController')
 const insumoController = require('../controller/insumoController')
 const produtoController = require('../controller/produtoController')
 const pedidoController = require('../controller/pedidoController')
+const relatorioController = require('../controller/relatorioController')
 
 module.exports = (jwtOptions, passport) => {
     router
@@ -68,6 +69,8 @@ module.exports = (jwtOptions, passport) => {
         .put('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.update(req, res))
         .put('/pedidos/:id/cancelar', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.cancelar(req, res))
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
+        // RELATÓRIOS
+        .get('/info/vendas/produtos/:type/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByProducts(req, res))
 
     return router
 }
