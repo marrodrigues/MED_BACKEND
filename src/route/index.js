@@ -70,8 +70,9 @@ module.exports = (jwtOptions, passport) => {
         .put('/pedidos/:id/cancelar', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.cancelar(req, res))
         // .delete('/pedidos/:id', passport.authenticate('jwt', { session: false }), (req, res) => pedidoController.delete(req, res))
         // RELATÓRIOS
-        .get('/info/vendas/produtos/:type/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByProducts(req, res))
         .get('/info/vendas/clientes/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByClients(req, res))
+        .get('/info/vendas/funcionarios/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByEmployee(req, res))
+        .get('/info/vendas/produtos/:type/:startDate/:endDate', passport.authenticate('jwt', { session: false }), (req,res) => relatorioController.findSellingsByProducts(req, res))
 
     return router
 }
