@@ -83,7 +83,34 @@ class LoteService {
 
     async findAll() {
         try {
-            const result = await lote.findAll()
+            const result = await lote.findAll({
+                include: [{
+                    association: "insumo",
+                    attributes: { 
+                        exclude: [
+                            "id", 
+                            "qtd_unid", 
+                            "unidade", 
+                            "createdAt", 
+                            "updatedAt", 
+                            "produtoId"
+                        ] 
+                    }
+                },{
+                    association: "produto",
+                    attributes: { 
+                        exclude: [
+                            "id", 
+                            "tamanho", 
+                            "valor",
+                            "tipo",
+                            "createdAt", 
+                            "updatedAt", 
+                            "produtoId"
+                        ] 
+                    }
+                }]
+            })
             return result
         } catch (error) {
             return { status: 500, error: error }
