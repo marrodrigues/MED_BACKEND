@@ -91,6 +91,7 @@ class RelatorioService {
                     
             sql = sql + "group by pr.nome " +
             "order by receita desc limit 5"; 
+
             let sellings = await sequelize.query(
                         sql, 
                         {
