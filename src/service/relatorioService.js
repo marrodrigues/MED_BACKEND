@@ -6,7 +6,7 @@ class RelatorioService {
 
     async findSellingsByClients(data){
         try {
-            const sql = "select c.id, pes.cpf, pes.nome, count(ped.codigo) qtd_pedidos, " +
+            let sql = "select c.id, pes.cpf, pes.nome, count(ped.codigo) qtd_pedidos, " +
                                                             "sum(ped.valor_total) receita " +
                             "from heroku_f1d31755cbdc0e8.pedidos ped " +
                             "join heroku_f1d31755cbdc0e8.clientes c " +
@@ -14,9 +14,18 @@ class RelatorioService {
                             "join heroku_f1d31755cbdc0e8.pessoas pes " +
                                 "on pes.id = c.`PessoaId` " +
                             "where ped.status = 3 " +
-                                "and ped.data_pedido between :startDate and :endDate " +
-                            "group by c.id " +
-                            "order by receita desc limit 5"
+                                "and ped.data_pedido between :startDate and :endDate "
+            if(data.body && data.body.length > 0){
+                sql = sql + "and c.id in ("
+                for(let i = 0; i < data.body.length; i++){
+                    sql = sql + "'" + data.body[i] + "'"
+                    if(i < 4){
+                        sql = sql + ", "
+                    }
+                }
+                sql = sql + ") "
+            }
+            sql = sql + "group by c.id order by receita desc limit 5"
             let sellings = await sequelize.query(
                         sql, 
                         {
@@ -38,7 +47,7 @@ class RelatorioService {
 
     async findSellingsByEmployee(data){
         try {
-            const sql = "select f.id, pes.cpf, pes.nome, count(ped.codigo) qtd_pedidos, " +
+            let sql = "select f.id, pes.cpf, pes.nome, count(ped.codigo) qtd_pedidos, " +
                                                             "sum(ped.valor_total) receita " +
                             "from heroku_f1d31755cbdc0e8.pedidos ped " +
                             "join heroku_f1d31755cbdc0e8.funcionarios f " +
@@ -46,9 +55,20 @@ class RelatorioService {
                             "join heroku_f1d31755cbdc0e8.pessoas pes " +
                                 "on pes.id = f.`PessoaId` " +
                             "where ped.status = 3 " +
-                                "and ped.data_pedido between :startDate and :endDate " +
-                            "group by f.id " +
-                            "order by receita desc limit 5"
+                                "and ped.data_pedido between :startDate and :endDate "
+            
+            if(data.body && data.body.length > 0){
+                sql = sql + "and f.id in ("
+                for(let i = 0; i < data.body.length; i++){
+                    sql = sql + "'" + data.body[i] + "'"
+                    if(i < 4){
+                        sql = sql + ", "
+                    }
+                }
+                sql = sql + ") "
+            }
+            sql = sql + "group by f.id order by receita desc limit 5"
+
             let sellings = await sequelize.query(
                         sql, 
                         {

@@ -3,13 +3,14 @@ const relatorioService = require('../service/relatorioService')
 class RelatorioController {
 
     findSellingsByClients(req, res) {
-        const mes = req.params.mes + '-'
+        const mes = req.params.mes
         const ano = req.params.ano + '-'
-        const startDate = ano + mes + '01 00:00:00'
-        const endDate = ano + mes + '01 00:00:00'
+        const mesSeguinte = Number(mes) + 1
+        const startDate = ano + mes + '-01 00:00:00'
+        const endDate = ano + mesSeguinte + '-01 00:00:00'
         let body = []
-        if(!req.params.body && req.params.body.lenght() > 0){
-            body = req.params.body 
+        if(req.body && Array.isArray(req.body)){
+            body = req.body 
         }
         if (!startDate || !endDate)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
@@ -28,13 +29,14 @@ class RelatorioController {
     }
 
     findSellingsByEmployee(req, res) {
-        const mes = req.params.mes + '-'
+        const mes = req.params.mes
         const ano = req.params.ano + '-'
-        const startDate = ano + mes + '01 00:00:00'
-        const endDate = ano + mes + '01 00:00:00'
+        const mesSeguinte = Number(mes) + 1
+        const startDate = ano + mes + '-01 00:00:00'
+        const endDate = ano + mesSeguinte + '-01 00:00:00'
         let body = []
-        if(!req.params.body && req.params.body.lenght() > 0){
-            body = req.params.body 
+        if(req.body && Array.isArray(req.body)){
+            body = req.body 
         }
         if (!startDate || !endDate)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
