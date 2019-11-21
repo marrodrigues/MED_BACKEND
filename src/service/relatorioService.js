@@ -75,7 +75,7 @@ class RelatorioService {
                     "from heroku_f1d31755cbdc0e8.pedidos as ped " +
                     "join heroku_f1d31755cbdc0e8.pedidos_produtos as pp on ped.id = pp.`pedidoId` " +
                     "join heroku_f1d31755cbdc0e8.produtos as pr on pr.id = pp.`produtoId` " +
-                    "where ped.data_pedido between '2019-11-01 00:00:00' and '2019-12-01 00:00:00' " +
+                    "where ped.data_pedido between :startDate and :endDate " +
                     "and ped.status = 3 and pr.tipo = :type " +
                     "group by pr.nome " +
                     "order by receita desc limit 5"
