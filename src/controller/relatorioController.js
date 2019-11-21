@@ -3,13 +3,20 @@ const relatorioService = require('../service/relatorioService')
 class RelatorioController {
 
     findSellingsByClients(req, res) {
-        let startDate = req.params.startDate + ' 00:00:00';
-        let endDate = req.params.endDate + ' 00:00:00';
+        const mes = req.params.mes + '-'
+        const ano = req.params.ano + '-'
+        const startDate = ano + mes + '01 00:00:00'
+        const endDate = ano + mes + '01 00:00:00'
+        let body = []
+        if(!req.params.body && req.params.body.lenght() > 0){
+            body = req.params.body 
+        }
         if (!startDate || !endDate)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
         let data = {
             "startDate": startDate,
             "endDate": endDate,
+            "body": body
         }
         relatorioService.findSellingsByClients(data).then(result => {
             if (!result || result.status === 404) {
@@ -21,13 +28,20 @@ class RelatorioController {
     }
 
     findSellingsByEmployee(req, res) {
-        let startDate = req.params.startDate + ' 00:00:00';
-        let endDate = req.params.endDate + ' 00:00:00';
+        const mes = req.params.mes + '-'
+        const ano = req.params.ano + '-'
+        const startDate = ano + mes + '01 00:00:00'
+        const endDate = ano + mes + '01 00:00:00'
+        let body = []
+        if(!req.params.body && req.params.body.lenght() > 0){
+            body = req.params.body 
+        }
         if (!startDate || !endDate)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
         let data = {
             "startDate": startDate,
             "endDate": endDate,
+            "body": body
         }
         relatorioService.findSellingsByEmployee(data).then(result => {
             if (!result || result.status === 404) {
@@ -39,15 +53,23 @@ class RelatorioController {
     }
 
     findSellingsByProducts(req, res) {
-        let startDate = req.params.startDate + ' 00:00:01';
-        let endDate = req.params.endDate + ' 00:00:00';
-        let type = req.params.type;
+        const mes = req.params.mes
+        const ano = req.params.ano + '-'
+        const mesSeguinte = Number(mes) + 1
+        const startDate = ano + mes + '-01 00:00:00'
+        const endDate = ano + mesSeguinte + '-01 00:00:00'
+        const type = req.params.type;
+        let body = []
+        if(req.body && Array.isArray(req.body)){
+            body = req.body 
+        }
         if (!startDate || !endDate || !type)
             res.status(400).send('Dados inconsistentes ao tentar excluir pedido.')
         let data = {
             "startDate": startDate,
             "endDate": endDate,
-            "type": type
+            "type": type,
+            "body": body
         }
         relatorioService.findSellingsByProducts(data).then(result => {
             if (!result || result.status === 404) {

@@ -70,15 +70,27 @@ class RelatorioService {
 
     async findSellingsByProducts(data){
         try {
-            const sql = "select pr.id, pr.nome, count(ped.codigo) qtd_pedidos, sum(pp.qtd) qtd_vendido, " +
+            let sql = "select pr.id, pr.nome, count(ped.codigo) qtd_pedidos, sum(pp.qtd) qtd_vendido, " +
                     "sum(ped.valor_total) receita " +
                     "from heroku_f1d31755cbdc0e8.pedidos as ped " +
                     "join heroku_f1d31755cbdc0e8.pedidos_produtos as pp on ped.id = pp.`pedidoId` " +
                     "join heroku_f1d31755cbdc0e8.produtos as pr on pr.id = pp.`produtoId` " +
                     "where ped.data_pedido between '2019-11-01 00:00:00' and '2019-12-01 00:00:00' " +
-                    "and ped.status = 3 and pr.tipo = :type " +
-                    "group by pr.nome " +
-                    "order by receita desc limit 5"
+                    "and ped.status = 3 and pr.tipo = :type "
+
+            if(data.body && data.body.length > 0){
+                sql = sql + "and pr.id in ("
+                for(let i = 0; i < data.body.length; i++){
+                    sql = sql + "'" + data.body[i] + "'"
+                    if(i < 4){
+                        sql = sql + ", "
+                    }
+                }
+                sql = sql + ") "
+            }
+                    
+            sql = sql + "group by pr.nome " +
+            "order by receita desc limit 5"; 
             let sellings = await sequelize.query(
                         sql, 
                         {
