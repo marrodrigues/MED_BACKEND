@@ -36,7 +36,7 @@ class RelatorioService {
                             type: sequelize.QueryTypes.SELECT
                         })
 
-            if(!sellings || sellings.lengh == 0){
+            if(!sellings || sellings.length == 0){
                 return {status: 404}
             }
             return sellings
@@ -79,7 +79,7 @@ class RelatorioService {
                             type: sequelize.QueryTypes.SELECT
                         })
 
-            if(!sellings || sellings.lengh == 0){
+            if(!sellings || sellings.length == 0){
                 return {status: 404}
             }
             return sellings
@@ -123,7 +123,7 @@ class RelatorioService {
                             type: sequelize.QueryTypes.SELECT
                         })
 
-            if(!sellings || sellings.lengh == 0){
+            if(!sellings || sellings.length == 0){
                 return {status: 404}
             }
             return sellings
