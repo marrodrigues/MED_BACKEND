@@ -303,7 +303,7 @@ class PedidoService {
                 "forma_pagamento": data.forma_pagamento,
                 "observacao": data.observacao,
                 "produtos": data.produtos,
-                "status": 1,
+                "status": data.status || 1,
                 "data_pedido": new Date(),
                 "valor_total": resultConsumo.valorPedido
             }
