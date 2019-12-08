@@ -3,11 +3,23 @@ const relatorioService = require('../service/relatorioService')
 class RelatorioController {
 
     findSellingsByClients(req, res) {
-        const mes = req.params.mes
-        const ano = req.params.ano + '-'
-        const mesSeguinte = Number(mes) + 1
-        const startDate = ano + mes + '-01 00:00:00'
-        const endDate = ano + mesSeguinte + '-01 00:00:00'
+        let ano = Number(req.params.ano)
+        let mes = Number(req.params.mes)
+        let mesSeguinte = 0
+        let startDate = ''
+        let endDate = ''
+        if(mes >= 12){
+            let anoSeguinte = ano + 1
+            mesSeguinte = '01'
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = anoSeguinte + '-' + mesSeguinte + '-01 00:00:00'
+        } else {
+            mesSeguinte = mes + 1
+            if(mes < 10) mes = '0' + mes
+            if(mesSeguinte < 10) mesSeguinte = '0' + mesSeguinte
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = ano + '-' + mesSeguinte + '-01 00:00:00'
+        }
         let body = []
         if(req.body && Array.isArray(req.body)){
             body = req.body 
@@ -29,11 +41,23 @@ class RelatorioController {
     }
 
     findSellingsByEmployee(req, res) {
-        const mes = req.params.mes
-        const ano = req.params.ano + '-'
-        const mesSeguinte = Number(mes) + 1
-        const startDate = ano + mes + '-01 00:00:00'
-        const endDate = ano + mesSeguinte + '-01 00:00:00'
+        let ano = Number(req.params.ano)
+        let mes = Number(req.params.mes)
+        let mesSeguinte = 0
+        let startDate = ''
+        let endDate = ''
+        if(mes >= 12){
+            let anoSeguinte = ano + 1
+            mesSeguinte = '01'
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = anoSeguinte + '-' + mesSeguinte + '-01 00:00:00'
+        } else {
+            mesSeguinte = mes + 1
+            if(mes < 10) mes = '0' + mes
+            if(mesSeguinte < 10) mesSeguinte = '0' + mesSeguinte
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = ano + '-' + mesSeguinte + '-01 00:00:00'
+        }
         let body = []
         if(req.body && Array.isArray(req.body)){
             body = req.body 
@@ -55,12 +79,24 @@ class RelatorioController {
     }
 
     findSellingsByProducts(req, res) {
-        const mes = req.params.mes
-        const ano = req.params.ano + '-'
-        const mesSeguinte = Number(mes) + 1
-        const startDate = ano + mes + '-01 00:00:00'
-        const endDate = ano + mesSeguinte + '-01 00:00:00'
-        const type = req.params.type;
+        let ano = Number(req.params.ano)
+        let mes = Number(req.params.mes)
+        let type = req.params.type
+        let mesSeguinte = 0
+        let startDate = ''
+        let endDate = ''
+        if(mes >= 12){
+            let anoSeguinte = ano + 1
+            mesSeguinte = '01'
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = anoSeguinte + '-' + mesSeguinte + '-01 00:00:00'
+        } else {
+            mesSeguinte = mes + 1
+            if(mes < 10) mes = '0' + mes
+            if(mesSeguinte < 10) mesSeguinte = '0' + mesSeguinte
+            startDate = ano + '-' + mes + '-01 00:00:00'
+            endDate = ano + '-' + mesSeguinte + '-01 00:00:00'
+        }
         let body = []
         if(req.body && Array.isArray(req.body)){
             body = req.body 
